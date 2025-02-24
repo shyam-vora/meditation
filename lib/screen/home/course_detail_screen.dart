@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
-import 'package:meditation/common_widget/select_tab_button.dart';
+import 'package:meditation/common/common_widget/select_tab_button.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   const CourseDetailScreen({super.key});

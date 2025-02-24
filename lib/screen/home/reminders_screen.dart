@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
-import 'package:meditation/common_widget/circle_button.dart';
-import 'package:meditation/common_widget/round_button.dart';
-import 'package:meditation/screen/home/home_screen.dart';
+import 'package:meditation/common/common_widget/circle_button.dart';
+import 'package:meditation/common/common_widget/round_button.dart';
 import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
 
 class RemindersScreen extends StatefulWidget {

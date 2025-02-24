@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:meditation/common/color_extension.dart';
-import 'package:meditation/common_widget/round_button.dart';
-import 'package:meditation/common_widget/round_text_field.dart';
-import 'package:meditation/screen/home/choose_topic_screen.dart';
-import 'package:meditation/screen/home/welcome_screen.dart';
+import 'package:meditation/common/common_widget/round_button.dart';
+import 'package:meditation/common/common_widget/round_text_field.dart';
 import 'package:meditation/screen/login/sign_up_screen.dart';
+import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
+import 'package:meditation/services/auth/auth_repository.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+   final bool isFromLogin;
+  const LoginScreen({super.key,this.isFromLogin = true});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
-  
-
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +113,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: MaterialButton(
-                          onPressed: () {},
+                          onPressed: () async{
+                            await AuthRepository()
+                                .signInWithGoogle(widget.isFromLogin);
+                            context.push(const MainTabViewScreen());
+                            context.push(const MainTabViewScreen());
+                          },
                           minWidth: double.maxFinite,
                           elevation: 0,
                           color: Colors.white,
@@ -169,24 +173,27 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 35,
               ),
-              RoundTextField(hintText: "Email address"),
+             RoundTextField(
+                hintText: "Email address",
+                controller: emailController,
+              ),
               const SizedBox(
                 height: 20,
               ),
-              RoundTextField(
+             RoundTextField(
                 hintText: "Password",
-                obscureText: true,
+                controller: passwordController,
               ),
               const SizedBox(
                 height: 20,
               ),
               RoundButton(title: "LOG IN", onPressed: () {
-                context.push( const WelcomeScreen());
-                
-              }),
+               context.push(const MainTabViewScreen(),);
+              },),
               TextButton(
                 onPressed: () {
-                  
+                  AuthRepository().signinUser(emailController.text, passwordController.text,context);
+                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainTabViewScreen()),);
                 },
                 child: Text(
                   "Forgot Password?",

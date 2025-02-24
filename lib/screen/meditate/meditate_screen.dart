@@ -169,7 +169,9 @@ class _MeditateScreenState extends State<MeditateScreen> {
                           ),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            
+                          },
                           child: Image.asset(
                             "assets/img/play_black.png",
                             width: 40,

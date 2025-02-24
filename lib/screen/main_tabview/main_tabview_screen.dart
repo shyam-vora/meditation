@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
-import 'package:meditation/common_widget/tab_button.dart';
+import 'package:meditation/common/common_widget/tab_button.dart';
 import 'package:meditation/screen/home/home_screen.dart';
 import 'package:meditation/screen/meditate/meditate_screen.dart';
 import 'package:meditation/screen/music/music_screen.dart';
+import 'package:meditation/screen/profile/screens/profile_screen.dart';
 import 'package:meditation/screen/sleep/sleep_screen.dart';
 
 class MainTabViewScreen extends StatefulWidget {
@@ -26,7 +27,6 @@ class _MainTabViewScreenState extends State<MainTabViewScreen> with SingleTicker
     controller?.addListener(() {
       selectTab = controller?.index ?? 0;
       setState(() {
-        
       });
     });
   }
@@ -36,12 +36,12 @@ class _MainTabViewScreenState extends State<MainTabViewScreen> with SingleTicker
     return Scaffold(
       body: TabBarView(
         controller: controller,
-        children: [
-        const HomeScreen(),
-        const SleepScreen(),
-        const MeditateScreen(),
-        const MusicScreen(),
-        Container( color: Colors.red, )
+        children: const [
+         HomeScreen(),
+         SleepScreen(),
+         MeditateScreen(),
+         MusicScreen(),
+         ProfileScreen(),
       ]),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(top: 15, bottom: 8),
@@ -84,7 +84,7 @@ class _MainTabViewScreenState extends State<MainTabViewScreen> with SingleTicker
 
               TabButton(
                 icon: "assets/img/profile_tab.png",
-                title: "Afsar",
+                title: "Profile",
                 isSelect: selectTab == 4,
                 onPressed: () {
                   changeTab(4);

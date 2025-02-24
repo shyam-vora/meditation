@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
-import 'package:meditation/common_widget/round_button.dart';
+import 'package:meditation/common/common_widget/round_button.dart';
+import 'package:meditation/database/app_database.dart';
+import 'package:meditation/models/moods_model.dart';
 
 class SleepStoriesDetailScreen extends StatefulWidget {
-  const SleepStoriesDetailScreen({super.key});
+  final String moodName;
+  final String assetImagePath;
+  const SleepStoriesDetailScreen({
+    super.key,
+    required this.moodName,
+    required this.assetImagePath,
+  });
 
   @override
   State<SleepStoriesDetailScreen> createState() =>
@@ -11,6 +19,7 @@ class SleepStoriesDetailScreen extends StatefulWidget {
 }
 
 class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
+  final AppDatabase appDatabase = AppDatabase.instance;
   List listArr = [
     {
       "image": "assets/img/mu3.png",
@@ -74,10 +83,12 @@ class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
               flexibleSpace: FlexibleSpaceBar(
                   background: ClipRRect(
                 borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15)),
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
                 child: Image.asset(
-                  "assets/img/sleep_detail_top.png",
+                  // "assets/img/sleep_detail_top.png",
+                  widget.assetImagePath,
                   width: context.width,
                   fit: BoxFit.cover,
                 ),
@@ -100,7 +111,7 @@ class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
                       height: 15,
                     ),
                     Text(
-                      "Night Island",
+                      widget.moodName,
                       style: TextStyle(
                           color: TColor.sleepText,
                           fontSize: 34,
@@ -246,7 +257,20 @@ class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
               const SizedBox(
                 height: 15,
               ),
-              RoundButton(title: "Play", onPressed: () {}),
+              RoundButton(
+                  title: "Play",
+                  onPressed: () async {
+                    MoodsModel newMood = MoodsModel(
+                      name: widget.moodName,
+                      assetImagePath: widget.assetImagePath,
+                    );
+                    await appDatabase.createMoods(newMood);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Mood Saved'),
+                      ),
+                    );
+                  }),
               const SizedBox(
                 height: 30,
               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
-import 'package:meditation/common_widget/round_button.dart';
+import 'package:meditation/common/common_widget/round_button.dart';
 import 'package:meditation/screen/home/choose_topic_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {

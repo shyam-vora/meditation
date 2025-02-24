@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meditation/common/color_extension.dart';
-import 'package:meditation/common_widget/round_button.dart';
-import 'package:meditation/common_widget/round_text_field.dart';
-import 'package:meditation/screen/home/choose_topic_screen.dart';
-import 'package:meditation/screen/home/welcome_screen.dart';
+import 'package:meditation/common/common_widget/round_button.dart';
+import 'package:meditation/common/common_widget/round_text_field.dart';
+import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
+import 'package:meditation/services/auth/auth_repository.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+  final bool isFromLogin;
+  const SignUpScreen({super.key, this.isFromLogin = true});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -15,6 +16,9 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   bool isTrue = false;
+  final userNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +115,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: MaterialButton(
-                          onPressed: () {},
+                          onPressed: () async{
+                            await AuthRepository()
+                                .signInWithGoogle(widget.isFromLogin);
+                            context.push(const MainTabViewScreen());
+
+                          },
                           minWidth: double.maxFinite,
                           elevation: 0,
                           color: Colors.white,
@@ -166,15 +175,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(
                 height: 35,
               ),
-              RoundTextField(hintText: "Username"),
-              const SizedBox(
-                height: 20,
+              RoundTextField(
+                hintText: "Username",
+                controller: userNameController,
               ),
-              RoundTextField(hintText: "Email address"),
               const SizedBox(
                 height: 20,
               ),
               RoundTextField(
+                hintText: "Email address",
+                controller: emailController,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              RoundTextField(
+                controller: passwordController,
                 hintText: "Password",
                 obscureText: true,
               ),
@@ -220,9 +236,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(
                 height: 8,
               ),
-              RoundButton(title: "GET STARTED", onPressed: () {
-                 context.push(const WelcomeScreen());
-              }),
+              RoundButton(
+                  title: "GET STARTED",
+                  onPressed: () {
+                    AuthRepository().signupUser(emailController.text, passwordController.text, userNameController.text, context,);
+                    context.push(const MainTabViewScreen());
+                  }),
               const Spacer(),
             ],
           ),

@@ -256,7 +256,10 @@ class _SleepScreenState extends State<SleepScreen> {
                 var cObj = listArr[index];
                 return GestureDetector(
                   onTap: () {
-                    context.push(const SleepStoriesDetailScreen());
+                    context.push( SleepStoriesDetailScreen(
+                      moodName : listArr[index]['title'],
+                      assetImagePath : listArr[index]['image'],
+                    ));
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
