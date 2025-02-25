@@ -13,25 +13,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Profile Screen"),
-        elevation: 1,
+      body: Padding(
+        
+        padding: const EdgeInsets.only(top: 40),
+        child: LayoutBuilder(builder: (context, constraints) {
+          final height = constraints.maxHeight;
+          return Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const SizedBox(height: 100, child: UserDetails()),
+              SizedBox(
+                height: height - 100,
+                child: const MoodHistory(),
+              ),
+            ],
+          );
+        }),
       ),
-      body: LayoutBuilder(builder: (context, constraints) {
-        final height = constraints.maxHeight;
-        return  Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            const SizedBox(
-              height:100,
-              child: UserDetails()),
-            SizedBox(
-              height: height-100,
-              child: const MoodHistory(),
-            ),
-          ],
-        );
-      }),
     );
   }
 }

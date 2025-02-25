@@ -85,12 +85,12 @@ class _MusicScreenState extends State<MusicScreen> {
                 child: Image.asset(
                   cObj["image"],
                   width: double.maxFinite,
-                  height: context.width * 0.3,
+                  height: context.width * 0.29,
                   fit: BoxFit.cover,
                 ),
               ),
               const SizedBox(
-                height: 8,
+                height: 5,
               ),
               Text(
                 cObj["title"],

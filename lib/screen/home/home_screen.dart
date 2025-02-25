@@ -379,7 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Image.asset(
                               rObj["image"],
                               width: context.width * 0.35,
-                              height: context.width * 0.35 * 0.7,
+                              height: context.width * 0.35 * 0.5,
                             ),
                             const SizedBox(
                               height: 8,

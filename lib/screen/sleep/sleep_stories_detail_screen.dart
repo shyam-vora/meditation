@@ -222,7 +222,7 @@ class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
                           child: Image.asset(
                             cObj["image"],
                             width: double.maxFinite,
-                            height: context.width * 0.3,
+                            height: context.width * 0.28,
                             fit: BoxFit.cover,
                           ),
                         ),

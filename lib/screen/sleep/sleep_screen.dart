@@ -256,9 +256,9 @@ class _SleepScreenState extends State<SleepScreen> {
                 var cObj = listArr[index];
                 return GestureDetector(
                   onTap: () {
-                    context.push( SleepStoriesDetailScreen(
-                      moodName : listArr[index]['title'],
-                      assetImagePath : listArr[index]['image'],
+                    context.push(SleepStoriesDetailScreen(
+                      moodName: listArr[index]['title'],
+                      assetImagePath: listArr[index]['image'],
                     ));
                   },
                   child: Column(
@@ -269,7 +269,7 @@ class _SleepScreenState extends State<SleepScreen> {
                         child: Image.asset(
                           cObj["image"],
                           width: double.maxFinite,
-                          height: context.width * 0.3,
+                          height: context.width * 0.28,
                           fit: BoxFit.cover,
                         ),
                       ),
