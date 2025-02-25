@@ -7,8 +7,8 @@ import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
 import 'package:meditation/services/auth/auth_repository.dart';
 
 class LoginScreen extends StatefulWidget {
-   final bool isFromLogin;
-  const LoginScreen({super.key,this.isFromLogin = true});
+  final bool isFromLogin;
+  const LoginScreen({super.key, this.isFromLogin = true});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: MaterialButton(
-                          onPressed: () async{
+                          onPressed: () async {
                             await AuthRepository()
                                 .signInWithGoogle(widget.isFromLogin);
                             context.push(const MainTabViewScreen());
@@ -173,37 +173,52 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 35,
               ),
-             RoundTextField(
+              RoundTextField(
                 hintText: "Email address",
                 controller: emailController,
               ),
               const SizedBox(
                 height: 20,
               ),
-             RoundTextField(
+              RoundTextField(
                 hintText: "Password",
                 controller: passwordController,
               ),
               const SizedBox(
                 height: 20,
               ),
-              RoundButton(title: "LOG IN", onPressed: () {
-               context.push(const MainTabViewScreen(),);
-              },),
-              TextButton(
-                onPressed: () {
-                  AuthRepository().signinUser(emailController.text, passwordController.text,context);
-                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainTabViewScreen()),);
+              RoundButton(
+                title: "LOG IN",
+                onPressed: () async {
+                  if (emailController.text.isEmpty ||
+                      passwordController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('All fields are required')));
+                    return;
+                  }
+                  final bool isDone = await AuthRepository().signinUser(
+                      emailController.text, passwordController.text, context);
+                  if (isDone) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const MainTabViewScreen()),
+                    );
+                  }
                 },
-                child: Text(
-                  "Forgot Password?",
-                  style: TextStyle(
-                    color: TColor.primaryText,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
               ),
+              // TextButton(
+              //   onPressed: () {
+              //                     },
+              //   child: Text(
+              //     "Forgot Password?",
+              //     style: TextStyle(
+              //       color: TColor.primaryText,
+              //       fontSize: 14,
+              //       fontWeight: FontWeight.w600,
+              //     ),
+              //   ),
+              // ),
 
               const Spacer(),
               Row(

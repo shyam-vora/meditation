@@ -14,10 +14,9 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(top: 40, left: 20),
+        padding: const EdgeInsets.only(top: 40, left: 20,right: 20),
         child: LayoutBuilder(builder: (context, constraints) {
           final height = constraints.maxHeight;
           return Column(
@@ -34,5 +33,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
- 
 }

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meditation/models/user_model.dart';
+import 'package:meditation/screen/login/sign_up_screen.dart';
+import 'package:meditation/screen/login/startup_screen.dart';
 import 'package:meditation/services/auth/auth_repository.dart';
 
 class UserDetails extends StatefulWidget {
@@ -48,13 +50,17 @@ class _UserDetailsState extends State<UserDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Hello, ${user.name}',
                     style: const TextStyle(
                         fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  ElevatedButton.icon(onPressed: logOut, icon: Icon(Icons.logout_rounded), label:Text("Logout"))
+                  ElevatedButton.icon(
+                      onPressed: logOut,
+                      icon: Icon(Icons.logout_rounded),
+                      label: Text("Logout"))
                 ],
               ),
               const SizedBox(height: 10),
@@ -70,8 +76,15 @@ class _UserDetailsState extends State<UserDetails> {
       },
     );
   }
- Future logOut() async {
-  await GoogleSignIn().signOut();
-  await FirebaseAuth.instance.signOut();
-}
+
+  Future logOut() async {
+    await googleSignIn.signOut();
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const StartUpScreen(),
+    ),
+    // (_) => true
+    );
+
+  }
 }

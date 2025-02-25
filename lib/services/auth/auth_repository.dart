@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meditation/core/constant/firebase_constants.dart';
 import 'package:meditation/models/user_model.dart';
-import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
+
+final googleSignIn =  GoogleSignIn();
 
 class AuthRepository {
   final auth = FirebaseAuth.instance;
-  final googleSignIn = GoogleSignIn();
 
   Future<UserModel> signInWithGoogle(bool isFromLogin) async {
     GoogleSignInAccount? googleUser = await googleSignIn.signIn();
@@ -44,43 +44,51 @@ class AuthRepository {
     return userModel;
   }
 
-  Future<void> signupUser(String email, String password, String username, BuildContext context) async {
+  Future<bool> signupUser(String email, String password, String username,
+      BuildContext context) async {
     try {
-      final UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       if (userCredential.user != null) {
-        await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set({
           'name': username,
           'email': email,
           'uid': userCredential.user!.uid,
         });
       }
-
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainTabViewScreen()));
+      return true;
     } catch (e) {
       print('Error signing up: $e');
     }
+      return false;
   }
 
-  Future<void> signinUser(String email, String password, BuildContext context) async {
+  Future<bool> signinUser(
+      String email, String password, BuildContext context) async {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-       
+
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('You are Logged in')));
+      return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('No user Found with this Email')));
       } else if (e.code == 'wrong-password') {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Password did not match')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Password did not match')));
       }
     }
+    return false;
   }
 
   Future<UserModel> getUserData(String uid) async {

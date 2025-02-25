@@ -115,11 +115,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: MaterialButton(
-                          onPressed: () async{
+                          onPressed: () async {
                             await AuthRepository()
                                 .signInWithGoogle(widget.isFromLogin);
                             context.push(const MainTabViewScreen());
-
                           },
                           minWidth: double.maxFinite,
                           elevation: 0,
@@ -238,9 +237,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               RoundButton(
                   title: "GET STARTED",
-                  onPressed: () {
-                    AuthRepository().signupUser(emailController.text, passwordController.text, userNameController.text, context,);
-                    context.push(const MainTabViewScreen());
+                  onPressed: () async {
+                    if (emailController.text.isEmpty ||
+                        passwordController.text.isEmpty ||
+                        userNameController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('All fields are required'),),);
+                      return;
+                    }
+                    final bool isSignUp = await AuthRepository().signupUser(
+                      emailController.text,
+                      passwordController.text,
+                      userNameController.text,
+                      context,
+                    );
+                    if (isSignUp) {
+                      context.push(const MainTabViewScreen());
+                    }
                   }),
               const Spacer(),
             ],
