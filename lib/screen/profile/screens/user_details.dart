@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meditation/models/user_model.dart';
 import 'package:meditation/screen/login/sign_up_screen.dart';
@@ -45,47 +46,29 @@ class _UserDetailsState extends State<UserDetails> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           UserModel user = snapshot.data!; // Get user data
-          return Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 6,
-                  offset: const Offset(2, 4),
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  'Hello, ${user.name}',
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 40, left: 10, right: 10, bottom: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hello, ${user.name}',
-                        style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '${user.email}',
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                    ],
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: logOut,
-                    icon: const Icon(Icons.logout_rounded),
-                    label: const Text("Logout"),
-                  ),
-                ],
               ),
-            ),
+              const SizedBox(height: 10),
+              Text(
+                user.email,
+                style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton.icon(
+                  onPressed: logOut,
+                  icon: const Icon(Icons.logout_rounded),
+                  label: const Text("Logout")),
+            ],
           );
         } else {
           return const Center(child: Text('No moods history found'));

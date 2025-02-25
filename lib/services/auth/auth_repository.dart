@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meditation/core/constant/firebase_constants.dart';
 import 'package:meditation/models/user_model.dart';
 
-final googleSignIn =  GoogleSignIn();
+final googleSignIn = GoogleSignIn();
 
 class AuthRepository {
   final auth = FirebaseAuth.instance;
@@ -44,7 +46,7 @@ class AuthRepository {
     return userModel;
   }
 
-  Future<bool> signupUser(String email, String password, String username,
+  Future<String?> signupUser(String email, String password, String username,
       BuildContext context) async {
     try {
       final UserCredential userCredential =
@@ -63,32 +65,44 @@ class AuthRepository {
           'uid': userCredential.user!.uid,
         });
       }
-      return true;
+      return null;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        return 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        return 'The account already exists for that email.';
+      } else if (e.code == 'invalid-email') {
+        return 'The email address is badly formatted. \n Please use valid email address.';
+      } else {
+        return e.message;
+      }
     } catch (e) {
-      print('Error signing up: $e');
+      return e.toString();
     }
-      return false;
   }
 
-  Future<bool> signinUser(
-      String email, String password, BuildContext context) async {
+  Future<String?> signinUser(String email, String password) async {
     try {
-      await FirebaseAuth.instance
+      final UserCredential creds = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('You are Logged in')));
-      return true;
+      log(creds.toString(), name: "creds");
+      return null;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No user Found with this Email')));
+        return 'No user Found with this Email';
       } else if (e.code == 'wrong-password') {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Password did not match')));
+        return 'Password did not match';
+      } else if (e.code == 'invalid-email') {
+        return 'The email address is badly formatted. \n Please use valid email address.';
+      } else if (e.code == "invalid-credential") {
+        return "Email or Password is incorrect";
+      } else {
+        log(e.toString());
+        return e.message;
       }
+    } catch (e) {
+      return e.toString();
     }
-    return false;
   }
 
   Future<UserModel> getUserData(String uid) async {

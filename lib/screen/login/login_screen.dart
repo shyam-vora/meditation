@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/common/common_widget/round_button.dart';
 import 'package:meditation/common/common_widget/round_text_field.dart';
+import 'package:meditation/common/show_snackbar_extension.dart';
 import 'package:meditation/screen/login/sign_up_screen.dart';
 import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
 import 'package:meditation/services/auth/auth_repository.dart';
@@ -192,17 +193,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () async {
                   if (emailController.text.isEmpty ||
                       passwordController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('All fields are required')));
+                    context.showSnackbar(
+                        message: "All fields are required",
+                        type: SnackbarMessageType.warn);
                     return;
                   }
-                  final bool isDone = await AuthRepository().signinUser(
-                      emailController.text, passwordController.text, context);
-                  if (isDone) {
-                    Navigator.pushReplacement(
+                  final String? errorMessage = await AuthRepository()
+                      .signinUser(
+                          emailController.text, passwordController.text);
+                  if (errorMessage == null) {
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                           builder: (_) => const MainTabViewScreen()),
+                      (_) => true,
+                    );
+
+                    context.showSnackbar(message: 'You are Logged in');
+                  } else {
+                    context.showSnackbar(
+                      message: errorMessage,
+                      type: SnackbarMessageType.error,
                     );
                   }
                 },

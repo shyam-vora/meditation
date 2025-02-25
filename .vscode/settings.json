@@ -1,5 +1,6 @@
 {
-    "cSpell.words": [
-        "Authanticated"
-    ]
+  "cSpell.words": [
+    "Authanticated"
+  ],
+  "dart.flutterSdkPath": ".fvm/versions/3.19.0"
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/common/common_widget/round_button.dart';
+import 'package:meditation/common/show_snackbar_extension.dart';
 import 'package:meditation/database/app_database.dart';
 import 'package:meditation/models/moods_model.dart';
 
@@ -265,10 +266,9 @@ class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
                       assetImagePath: widget.assetImagePath,
                     );
                     await appDatabase.createMoods(newMood);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Mood Saved'),
-                      ),
+                    context.showSnackbar(
+                      message: "Mood Saved Successfully",
+                      type: SnackbarMessageType.success,
                     );
                   }),
               const SizedBox(
