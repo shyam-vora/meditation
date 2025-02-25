@@ -15,22 +15,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: 40, left: 20,right: 20),
-        child: LayoutBuilder(builder: (context, constraints) {
-          final height = constraints.maxHeight;
-          return Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const SizedBox(height: 100, child: UserDetails()),
-              SizedBox(
-                height: height - 100,
-                child: const MoodHistory(),
-              ),
-            ],
-          );
-        }),
-      ),
+      body: LayoutBuilder(builder: (context, constraints) {
+        final height = constraints.maxHeight;
+        return Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const SizedBox(height: 100, child: UserDetails()),
+            SizedBox(
+              height: height - 100,
+              child: const MoodHistory(),
+            ),
+          ],
+        );
+      }),
     );
   }
 }

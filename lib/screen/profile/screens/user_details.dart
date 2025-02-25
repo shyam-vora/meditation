@@ -45,30 +45,47 @@ class _UserDetailsState extends State<UserDetails> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           UserModel user = snapshot.data!; // Get user data
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+          return Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 6,
+                  offset: const Offset(2, 4),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  top: 40, left: 10, right: 10, bottom: 15),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Hello, ${user.name}',
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hello, ${user.name}',
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '${user.email}',
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ],
                   ),
                   ElevatedButton.icon(
-                      onPressed: logOut,
-                      icon: Icon(Icons.logout_rounded),
-                      label: Text("Logout"))
+                    onPressed: logOut,
+                    icon: const Icon(Icons.logout_rounded),
+                    label: const Text("Logout"),
+                  ),
                 ],
               ),
-              const SizedBox(height: 10),
-              Text(
-                '${user.email}',
-                style: const TextStyle(fontSize: 18),
-              ),
-            ],
+            ),
           );
         } else {
           return const Center(child: Text('No moods history found'));
@@ -80,11 +97,11 @@ class _UserDetailsState extends State<UserDetails> {
   Future logOut() async {
     await googleSignIn.signOut();
     await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const StartUpScreen(),
-    ),
-    // (_) => true
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => const StartUpScreen(),
+      ),
+      // (_) => true
     );
-
   }
 }

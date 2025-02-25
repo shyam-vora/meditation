@@ -52,11 +52,10 @@ class _MoodHistoryState extends State<MoodHistory> {
           }
           List<MoodsModel> moodsList = snapshot.data!;
           return Column(
-        mainAxisSize: MainAxisSize.min,
-
+            mainAxisSize: MainAxisSize.min,
             children: [
               const Padding(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.only(top: 30, left: 10, bottom: 0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
