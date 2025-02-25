@@ -201,7 +201,7 @@ class _MeditateScreenState extends State<MeditateScreen> {
                 return InkWell(
                   borderRadius: BorderRadius.circular(10),
                   onTap: () {
-                    context.push(const RemindersScreen());
+                    context.push( RemindersScreen(assetImagePath: dataArr[index]["image"] ,moodName:  dataArr[index]["title"],));
                   },
                   child: Container(
                     height: height,

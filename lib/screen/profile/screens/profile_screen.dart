@@ -14,8 +14,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        
-        padding: const EdgeInsets.only(top: 40),
+        padding: const EdgeInsets.only(top: 40, left: 20),
         child: LayoutBuilder(builder: (context, constraints) {
           final height = constraints.maxHeight;
           return Column(

@@ -46,10 +46,13 @@ class _UserDetailsState extends State<UserDetails> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Hello, ${user.name}',
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Hello, ${user.name}',
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(height: 10),
               Text(
