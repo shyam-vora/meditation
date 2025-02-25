@@ -34,11 +34,11 @@ class AppDatabase {
     ''');
   }
 
-Future<void> createMoods(MoodsModel moodsModel) async {
-  final db = await database;
-  await db.insert(tableName, moodsModel.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace);
-}
+  Future<void> createMoods(MoodsModel moodsModel) async {
+    final db = await database;
+    await db.insert(tableName, moodsModel.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
 
   Future<List<MoodsModel?>> realAllMoods() async {
     final db = await instance.database;
@@ -54,9 +54,11 @@ Future<void> createMoods(MoodsModel moodsModel) async {
   Future<void> delete(int id) async {
     final db = await database;
     try {
-      await db.delete(tableName,
-          where: "$id = ?",
-          whereArgs: [id]);
+      await db.delete(
+        tableName,
+        where: "id = ?", // Use the column name here
+        whereArgs: [id], // Pass the id value as a parameter
+      );
     } catch (err) {
       debugPrint("Something went wrong when deleting an item: $err");
     }

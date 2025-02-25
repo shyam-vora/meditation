@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/common/common_widget/circle_button.dart';
 import 'package:meditation/common/common_widget/round_button.dart';
+import 'package:meditation/common/show_snackbar_extension.dart';
 import 'package:meditation/database/app_database.dart';
 import 'package:meditation/models/moods_model.dart';
 import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
@@ -10,14 +11,14 @@ import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
 class RemindersScreen extends StatefulWidget {
   final String moodName;
   final String assetImagePath;
-  const RemindersScreen({super.key, required this.assetImagePath,required this.moodName});
+  const RemindersScreen(
+      {super.key, required this.assetImagePath, required this.moodName});
 
   @override
   State<RemindersScreen> createState() => _RemindersScreenState();
 }
 
 class _RemindersScreenState extends State<RemindersScreen> {
-
   List dayArr = [
     {"name": "SU", "is_select": false},
     {"name": "M", "is_select": false},
@@ -120,19 +121,20 @@ class _RemindersScreenState extends State<RemindersScreen> {
                 ],
               ),
             ),
-            RoundButton(title: "SAVE", onPressed: ()async {
-               MoodsModel newMood = MoodsModel(
-                      name: widget.moodName,
-                      assetImagePath: widget.assetImagePath,
-                    );
-                    await AppDatabase.instance.createMoods(newMood);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Mood Saved'),
-                      ),
-                    );
-              context.push(const MainTabViewScreen());
-            }),
+            RoundButton(
+                title: "SAVE",
+                onPressed: () async {
+                  MoodsModel newMood = MoodsModel(
+                    name: widget.moodName,
+                    assetImagePath: widget.assetImagePath,
+                  );
+                  await AppDatabase.instance.createMoods(newMood);
+                  context.showSnackbar(
+                    message: 'Mood Saved Successfully',
+                    type: SnackbarMessageType.success,
+                  );
+                  context.push(const MainTabViewScreen());
+                }),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

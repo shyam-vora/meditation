@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/common/common_widget/round_button.dart';
 import 'package:meditation/common/common_widget/round_text_field.dart';
+import 'package:meditation/common/show_snackbar_extension.dart';
 import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
 import 'package:meditation/services/auth/auth_repository.dart';
 
@@ -196,63 +197,73 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(
                 height: 8,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Text(
-                      "i have read the ",
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(color: TColor.secondaryText, fontSize: 14),
-                    ),
-                    Text(
-                      "Privacy Policy",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: TColor.primary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          isTrue = !isTrue;
-                        });
-                      },
-                      icon: Icon(
-                        isTrue
-                            ? Icons.check_box
-                            : Icons.check_box_outline_blank_rounded,
-                        color: isTrue ? TColor.primary : TColor.secondaryText,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 20),
+              //   child: Row(
+              //     children: [
+              //       Text(
+              //         "i have read the ",
+              //         textAlign: TextAlign.center,
+              //         style:
+              //             TextStyle(color: TColor.secondaryText, fontSize: 14),
+              //       ),
+              //       Text(
+              //         "Privacy Policy",
+              //         textAlign: TextAlign.center,
+              //         style: TextStyle(
+              //           color: TColor.primary,
+              //           fontSize: 14,
+              //           fontWeight: FontWeight.w600,
+              //         ),
+              //       ),
+              //       const Spacer(),
+              //       IconButton(
+              //         onPressed: () {
+              //           setState(() {
+              //             isTrue = !isTrue;
+              //           });
+              //         },
+              //         icon: Icon(
+              //           isTrue
+              //               ? Icons.check_box
+              //               : Icons.check_box_outline_blank_rounded,
+              //           color: isTrue ? TColor.primary : TColor.secondaryText,
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // ),
+              // const SizedBox(
+              //   height: 8,
+              // ),
               RoundButton(
                   title: "GET STARTED",
                   onPressed: () async {
                     if (emailController.text.isEmpty ||
                         passwordController.text.isEmpty ||
                         userNameController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('All fields are required'),),);
+                      context.showSnackbar(
+                          message: "All fields are required",
+                          type: SnackbarMessageType.warn);
                       return;
                     }
-                    final bool isSignUp = await AuthRepository().signupUser(
+                    final String? errorMessage =
+                        await AuthRepository().signupUser(
                       emailController.text,
                       passwordController.text,
                       userNameController.text,
                       context,
                     );
-                    if (isSignUp) {
-                      context.push(const MainTabViewScreen());
+                    if (errorMessage == null) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (_) => const MainTabViewScreen()),
+                          (_) => true);
+                    } else {
+                      context.showSnackbar(
+                        message: errorMessage,
+                        type: SnackbarMessageType.error,
+                      );
                     }
                   }),
               const Spacer(),

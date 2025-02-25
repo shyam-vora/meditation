@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meditation/models/user_model.dart';
 import 'package:meditation/screen/login/sign_up_screen.dart';
@@ -49,25 +50,24 @@ class _UserDetailsState extends State<UserDetails> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Hello, ${user.name}',
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  ElevatedButton.icon(
-                      onPressed: logOut,
-                      icon: Icon(Icons.logout_rounded),
-                      label: Text("Logout"))
-                ],
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  'Hello, ${user.name}',
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(height: 10),
               Text(
-                '${user.email}',
+                user.email,
                 style: const TextStyle(fontSize: 18),
               ),
+              const SizedBox(height: 10),
+              ElevatedButton.icon(
+                  onPressed: logOut,
+                  icon: const Icon(Icons.logout_rounded),
+                  label: const Text("Logout")),
             ],
           );
         } else {
@@ -80,11 +80,11 @@ class _UserDetailsState extends State<UserDetails> {
   Future logOut() async {
     await googleSignIn.signOut();
     await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const StartUpScreen(),
-    ),
-    // (_) => true
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => const StartUpScreen(),
+      ),
+      // (_) => true
     );
-
   }
 }

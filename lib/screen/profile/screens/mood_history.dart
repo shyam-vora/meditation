@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:meditation/common/show_snackbar_extension.dart';
 import 'package:meditation/database/app_database.dart';
 import 'package:meditation/models/moods_model.dart';
 
@@ -52,11 +54,10 @@ class _MoodHistoryState extends State<MoodHistory> {
           }
           List<MoodsModel> moodsList = snapshot.data!;
           return Column(
-        mainAxisSize: MainAxisSize.min,
-
+            mainAxisSize: MainAxisSize.min,
             children: [
               const Padding(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.symmetric(vertical: 8),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -70,7 +71,6 @@ class _MoodHistoryState extends State<MoodHistory> {
               ),
               Flexible(
                 child: ListView.builder(
-                  // shrinkWrap: true,
                   itemCount: moodsList.length,
                   itemBuilder: (context, index) {
                     return Card(
@@ -96,10 +96,11 @@ class _MoodHistoryState extends State<MoodHistory> {
                                   setState(() {
                                     _moodsList = _getMoodData();
                                   });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content:
-                                              Text('Deleted Successfully!')));
+
+                                  context.showSnackbar(
+                                    message: 'Deleted Successfully!',
+                                    type: SnackbarMessageType.success,
+                                  );
                                 },
                                 icon: const Icon(Icons.delete)),
                           ],
@@ -112,7 +113,10 @@ class _MoodHistoryState extends State<MoodHistory> {
             ],
           );
         } else {
-          return const Center(child: Text('No user data available'));
+          return const Center(
+              child: Text(
+            'No moods history found.',
+          ));
         }
       },
     );
