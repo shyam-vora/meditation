@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meditation/models/user_model.dart';
 import 'package:meditation/services/auth/auth_repository.dart';
 
@@ -46,13 +47,15 @@ class _UserDetailsState extends State<UserDetails> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Hello, ${user.name}',
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold),
-                ),
+              Row(
+                children: [
+                  Text(
+                    'Hello, ${user.name}',
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  ElevatedButton.icon(onPressed: logOut, icon: Icon(Icons.logout_rounded), label:Text("Logout"))
+                ],
               ),
               const SizedBox(height: 10),
               Text(
@@ -67,4 +70,8 @@ class _UserDetailsState extends State<UserDetails> {
       },
     );
   }
+ Future logOut() async {
+  await GoogleSignIn().signOut();
+  await FirebaseAuth.instance.signOut();
+}
 }

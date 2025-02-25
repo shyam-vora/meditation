@@ -197,7 +197,6 @@ class _MeditateScreenState extends State<MeditateScreen> {
                     ? context.width * 0.55
                     : context.width * 0.45;
                 var cObj = dataArr[index] as Map? ?? {};
-
                 return InkWell(
                   borderRadius: BorderRadius.circular(10),
                   onTap: () {
