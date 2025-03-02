@@ -3,9 +3,10 @@ import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/common/common_widget/round_button.dart';
 import 'package:meditation/common/common_widget/round_text_field.dart';
 import 'package:meditation/common/show_snackbar_extension.dart';
+import 'package:meditation/database/app_database.dart';
 import 'package:meditation/screen/login/sign_up_screen.dart';
 import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
-import 'package:meditation/services/auth/auth_repository.dart';
+import 'package:meditation/services/auth.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool isFromLogin;
@@ -114,12 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: MaterialButton(
-                          onPressed: () async {
-                            await AuthRepository()
-                                .signInWithGoogle(widget.isFromLogin);
-                            context.push(const MainTabViewScreen());
-                            context.push(const MainTabViewScreen());
-                          },
+                          onPressed: () {},
                           minWidth: double.maxFinite,
                           elevation: 0,
                           color: Colors.white,
@@ -198,9 +194,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         type: SnackbarMessageType.warn);
                     return;
                   }
-                  final String? errorMessage = await AuthRepository()
-                      .signinUser(
-                          emailController.text, passwordController.text);
+
+                  final String? errorMessage = await _login();
+
                   if (errorMessage == null) {
                     Navigator.pushAndRemoveUntil(
                       context,
@@ -264,5 +260,22 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future<String?> _login() async {
+    final user =
+        await AppDatabase.instance.getUserByEmail(emailController.text);
+
+    if (user == null) {
+      return 'User not found';
+    }
+
+    if (user.password != passwordController.text) {
+      return 'Invalid password';
+    }
+
+    // Save login state
+    await AuthService.saveUserLogin(user.email);
+    return null;
   }
 }

@@ -7,6 +7,7 @@ extension MySnackbar on BuildContext {
     required String message,
     SnackbarMessageType type = SnackbarMessageType.info,
   }) {
+    ScaffoldMessenger.of(this).hideCurrentSnackBar();
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
         // padding: const EdgeInsets.all(8),

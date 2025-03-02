@@ -4,8 +4,10 @@ import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/common/common_widget/round_button.dart';
 import 'package:meditation/common/common_widget/round_text_field.dart';
 import 'package:meditation/common/show_snackbar_extension.dart';
+import 'package:meditation/database/app_database.dart';
+import 'package:meditation/models/user_model.dart';
 import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
-import 'package:meditation/services/auth/auth_repository.dart';
+import 'package:meditation/services/auth.dart';
 
 class SignUpScreen extends StatefulWidget {
   final bool isFromLogin;
@@ -116,11 +118,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: MaterialButton(
-                          onPressed: () async {
-                            await AuthRepository()
-                                .signInWithGoogle(widget.isFromLogin);
-                            context.push(const MainTabViewScreen());
-                          },
+                          onPressed: () async {},
                           minWidth: double.maxFinite,
                           elevation: 0,
                           color: Colors.white,
@@ -247,14 +245,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           type: SnackbarMessageType.warn);
                       return;
                     }
-                    final String? errorMessage =
-                        await AuthRepository().signupUser(
-                      emailController.text,
-                      passwordController.text,
-                      userNameController.text,
-                      context,
-                    );
+                    final String? errorMessage = await _signup();
                     if (errorMessage == null) {
+                      await AuthService.saveUserLogin(emailController.text);
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                               builder: (_) => const MainTabViewScreen()),
@@ -272,5 +265,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
     );
+  }
+
+  Future<String?> _signup() async {
+    if (userNameController.text.isEmpty) {
+      return 'Please enter a username';
+    }
+    if (emailController.text.isEmpty) {
+      return 'Please enter an email';
+    }
+    if (!emailController.text.contains('@')) {
+      return 'Please enter a valid email';
+    }
+    if (passwordController.text.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (passwordController.text.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+
+    final existingUser =
+        await AppDatabase.instance.getUserByEmail(emailController.text);
+
+    if (existingUser != null) {
+      return 'User with this email already exists';
+    }
+
+    final user = UserModel(
+      name: userNameController.text,
+      email: emailController.text,
+      password: passwordController.text,
+    );
+
+    await AppDatabase.instance.insertUser(user);
+    return null;
   }
 }

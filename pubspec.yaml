@@ -36,13 +36,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_staggered_grid_view: ^0.7.0
-  firebase_auth:
-  firebase_core:
-  google_sign_in: ^6.2.2
-  cloud_firestore:
   sqflite:
   path: ^1.9.0
   path_provider:
+  shared_preferences: ^2.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

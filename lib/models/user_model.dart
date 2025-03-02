@@ -1,61 +1,67 @@
 import 'dart:convert';
 
 class UserModel {
+  final int? id;
   final String name;
   final String email;
-  final String uid;
+  final String password;
 
   UserModel({
+    this.id,
     required this.name,
     required this.email,
-    required this.uid,
+    required this.password,
   });
 
   UserModel copyWith({
     String? name,
     String? email,
-    String? uid,
+    String? password,
+    int? id,
   }) {
     return UserModel(
+      id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
-      uid: uid ?? this.uid,
+      password: password ?? this.password,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'name': name,
+      'username': name,
       'email': email,
-      'uid': uid,
+      'password': password,
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      name: map['name'] as String,
+      id: map['id'] as int,
+      name: map['username'] as String,
       email: map['email'] as String,
-      uid: map['uid'] as String,
+      password: map['password'] as String,
     );
   }
 
   @override
-  String toString() => 'UserModel(name: $name, email: $email, uid: $uid)';
+  String toString() =>
+      'UserModel(name: $name, email: $email, password: $password)';
 
   @override
   bool operator ==(covariant UserModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.name == name &&
-      other.email == email &&
-      other.uid == uid;
+
+    return other.name == name &&
+        other.email == email &&
+        other.password == password;
   }
 
   @override
-  int get hashCode => name.hashCode ^ email.hashCode ^ uid.hashCode;
+  int get hashCode => name.hashCode ^ email.hashCode ^ password.hashCode;
 
   String toJson() => json.encode(toMap());
 
-  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserModel.fromJson(String source) =>
+      UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

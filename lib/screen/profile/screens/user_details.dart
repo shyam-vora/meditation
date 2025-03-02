@@ -1,11 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:meditation/database/app_database.dart';
 import 'package:meditation/models/user_model.dart';
-import 'package:meditation/screen/login/sign_up_screen.dart';
 import 'package:meditation/screen/login/startup_screen.dart';
-import 'package:meditation/services/auth/auth_repository.dart';
+import 'package:meditation/services/auth.dart';
 
 class UserDetails extends StatefulWidget {
   const UserDetails({super.key});
@@ -15,37 +15,39 @@ class UserDetails extends StatefulWidget {
 }
 
 class _UserDetailsState extends State<UserDetails> {
-  late Future<UserModel> _userModel;
+  late Future<UserModel?> _userModel;
   @override
   void initState() {
     super.initState();
     _userModel = _getUserData();
   }
 
-  Future<UserModel> _getUserData() async {
+  Future<UserModel?> _getUserData() async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        return await AuthRepository().getUserData(user.uid);
+      final String? loggedInUserEmail =
+          await AuthService.getLoggedInUserEmail();
+      if (loggedInUserEmail != null) {
+        return await AppDatabase.instance.getUserByEmail(loggedInUserEmail);
       } else {
-        throw Exception("No authenticated user");
+        return null;
       }
     } catch (e) {
-      throw Exception("Error fetching user data: $e");
+      log(e.toString(), name: 'UserDetails');
+      return null;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<UserModel>(
+    return FutureBuilder<UserModel?>(
       future: _userModel, // Fetch user data
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (snapshot.hasData) {
-          UserModel user = snapshot.data!; // Get user data
+        } else if (snapshot.hasData && snapshot.data != null) {
+          UserModel user = snapshot.data!;
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,15 +73,14 @@ class _UserDetailsState extends State<UserDetails> {
             ],
           );
         } else {
-          return const Center(child: Text('No moods history found'));
+          return const Center(child: Text('Error Fetching User Data'));
         }
       },
     );
   }
 
   Future logOut() async {
-    await googleSignIn.signOut();
-    await FirebaseAuth.instance.signOut();
+    await AuthService.logout();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const StartUpScreen(),
