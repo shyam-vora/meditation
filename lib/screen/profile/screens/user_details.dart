@@ -47,30 +47,49 @@ class _UserDetailsState extends State<UserDetails> {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData && snapshot.data != null) {
-          UserModel user = snapshot.data!;
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: Text(
-                  'Hello, ${user.name}',
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold),
+          UserModel user = snapshot.data!; // Get user data
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2), // Shadow color
+                  spreadRadius: 2,
+                  blurRadius: 6,
+                  offset: const Offset(2, 4), // Position of the shadow
                 ),
+              ],
+            ),
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  top: 20, left: 12, right: 10, bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Hello, ${user.name}',
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '${user.email}',
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: logOut,
+                    icon: const Icon(Icons.logout_rounded),
+                    label: const Text("Logout"),
+                  ),
+                ],
               ),
-              const SizedBox(height: 10),
-              Text(
-                user.email,
-                style: const TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton.icon(
-                  onPressed: logOut,
-                  icon: const Icon(Icons.logout_rounded),
-                  label: const Text("Logout")),
-            ],
+            ),
           );
         } else {
           return const Center(child: Text('Error Fetching User Data'));

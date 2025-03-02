@@ -57,7 +57,7 @@ class _MoodHistoryState extends State<MoodHistory> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
+                padding: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
