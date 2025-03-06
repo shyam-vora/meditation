@@ -23,42 +23,55 @@ class _SleepScreenState extends State<SleepScreen> {
     {
       "image": "assets/img/mu1.png",
       "title": "Night Island",
-      "subtitle": "45 MIN . SLEEP MUSIC"
+      "subtitle": "45 MIN . SLEEP MUSIC",
+      "audio": "audio/music1.mp3"
     },
     {
       "image": "assets/img/mu2.png",
       "title": "Sweet Sleep",
-      "subtitle": "45 MIN . SLEEP MUSIC"
+      "subtitle": "45 MIN . SLEEP MUSIC",
+      "audio": "audio/music2.mp3",
     },
     {
       "image": "assets/img/mu3.png",
       "title": "Good Night",
-      "subtitle": "45 MIN . SLEEP MUSIC"
+      "subtitle": "45 MIN . SLEEP MUSIC",
+      "audio": "audio/music3.mp3",
     },
     {
       "image": "assets/img/mu4.png",
       "title": "Moon Clouds",
-      "subtitle": "45 MIN . SLEEP MUSIC"
+      "subtitle": "45 MIN . SLEEP MUSIC",
+      "audio": "audio/music4.mp3",
+
     },
     {
       "image": "assets/img/mu2.png",
       "title": "Night Island",
-      "subtitle": "45 MIN . SLEEP MUSIC"
+      "subtitle": "45 MIN . SLEEP MUSIC",
+      "audio": "audio/music5.mp3",
+
     },
     {
       "image": "assets/img/mu1.png",
       "title": "Sweet Sleep",
-      "subtitle": "45 MIN . SLEEP MUSIC"
+      "subtitle": "45 MIN . SLEEP MUSIC",
+      "audio": "audio/music1.mp3",
+
     },
     {
       "image": "assets/img/mu4.png",
       "title": "Good Night",
-      "subtitle": "45 MIN . SLEEP MUSIC"
+      "subtitle": "45 MIN . SLEEP MUSIC",
+      "audio": "audio/music2.mp3",
+
     },
     {
       "image": "assets/img/mu3.png",
       "title": "Moon Clouds",
-      "subtitle": "45 MIN . SLEEP MUSIC"
+      "subtitle": "45 MIN . SLEEP MUSIC",
+      "audio": "audio/music3.mp3",
+
     },
   ];
 
@@ -259,6 +272,7 @@ class _SleepScreenState extends State<SleepScreen> {
                     context.push(SleepStoriesDetailScreen(
                       moodName: listArr[index]['title'],
                       assetImagePath: listArr[index]['image'],
+                      audioPath: listArr[index]['audio'],
                     ));
                   },
                   child: Column(

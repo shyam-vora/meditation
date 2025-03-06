@@ -86,7 +86,7 @@ class AppDatabase {
     }
   }
 
-  Future<List<MoodsModel?>> realAllMoods() async {
+  Future<List<MoodsModel?>> readAllMoods() async {
     final db = await instance.database;
     final result = await db.query('moods');
     return result.map((json) => MoodsModel.fromMap(json)).toList();

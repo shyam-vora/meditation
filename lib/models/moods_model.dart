@@ -7,11 +7,13 @@ class MoodsModel {
   final String? assetImagePath;
   final int count; // New field
 
+  final String audioPath;
   MoodsModel({
     this.id,
     required this.name,
     this.assetImagePath,
     this.count = 1, // Default to 1
+    required this.audioPath,
   });
 
   MoodsModel copyWith({
@@ -19,12 +21,14 @@ class MoodsModel {
     String? name,
     String? assetImagePath,
     int? count,
+    String? audioPath,
   }) {
     return MoodsModel(
       id: id ?? this.id,
       name: name ?? this.name,
       assetImagePath: assetImagePath ?? this.assetImagePath,
       count: count ?? this.count,
+      audioPath: audioPath ?? this.audioPath,
     );
   }
 
@@ -40,6 +44,7 @@ class MoodsModel {
       'name': name,
       'assetImagePath': assetImagePath,
       'count': count,
+      'audioPath': audioPath,
     };
   }
 
@@ -49,6 +54,7 @@ class MoodsModel {
       name: map['name'] as String,
       assetImagePath: map['assetImagePath'] as String,
       count: map['count'] as int,
+      audioPath: map['audioPath'] as String,
     );
   }
 

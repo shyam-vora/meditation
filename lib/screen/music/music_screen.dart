@@ -54,21 +54,8 @@ class _MusicScreenState extends State<MusicScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: TColor.sleep,
-      appBar: AppBar(
-        leading: Container(),
-        centerTitle: true,
-        title: Text(
-          "Music",
-          style: TextStyle(
-            color: TColor.sleepText,
-            fontSize: 17,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-      body: GridView.builder(
+    return Expanded(
+      child: GridView.builder(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,

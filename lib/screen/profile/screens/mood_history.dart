@@ -23,7 +23,7 @@ class _MoodHistoryState extends State<MoodHistory> {
 
   Future<List<MoodsModel>?> _getMoodData() async {
     try {
-      final moods = await AppDatabase.instance.realAllMoods();
+      final moods = await appDatabase.readAllMoods();
       if (moods.isEmpty) {
         return null;
       }
@@ -78,11 +78,10 @@ class _MoodHistoryState extends State<MoodHistory> {
                         leading: moodsList[index].assetImagePath != null
                             ? Image.asset(moodsList[index].assetImagePath!)
                             : null,
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        title: Column(
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   moodsList[index].name,
