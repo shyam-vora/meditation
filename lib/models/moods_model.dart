@@ -19,6 +19,7 @@ class MoodsModel {
     String? name,
     String? assetImagePath,
     int? count,
+    String? audioPath,
   }) {
     return MoodsModel(
       id: id ?? this.id,

@@ -4,14 +4,17 @@ import 'package:meditation/common/common_widget/round_button.dart';
 import 'package:meditation/common/show_snackbar_extension.dart';
 import 'package:meditation/database/app_database.dart';
 import 'package:meditation/models/moods_model.dart';
+import 'package:meditation/screen/sleep/audio_player_screen.dart';
 
 class SleepStoriesDetailScreen extends StatefulWidget {
   final String moodName;
   final String assetImagePath;
+  final String audioPath;
   const SleepStoriesDetailScreen({
     super.key,
     required this.moodName,
     required this.assetImagePath,
+    required this.audioPath,
   });
 
   @override
@@ -21,6 +24,7 @@ class SleepStoriesDetailScreen extends StatefulWidget {
 
 class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
   final AppDatabase appDatabase = AppDatabase.instance;
+
   List listArr = [
     {
       "image": "assets/img/mu3.png",
@@ -221,7 +225,9 @@ class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.asset(
-                            cObj["image"],
+                            //  cObj["image"],
+                            // cObj.assetImagePath,
+                            widget.assetImagePath,
                             width: double.maxFinite,
                             height: context.width * 0.28,
                             fit: BoxFit.cover,
@@ -242,7 +248,8 @@ class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
                           height: 4,
                         ),
                         Text(
-                          cObj["subtitle"],
+                          widget.moodName,
+                          // cObj["subtitle"],
                           maxLines: 1,
                           style: TextStyle(
                             color: TColor.sleepText,
@@ -264,11 +271,22 @@ class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
                     MoodsModel newMood = MoodsModel(
                       name: widget.moodName,
                       assetImagePath: widget.assetImagePath,
+                      audioPath: widget.audioPath,
                     );
                     await appDatabase.createOrIncrementMood(newMood);
                     context.showSnackbar(
                       message: "Mood Tracked Successfully",
                       type: SnackbarMessageType.success,
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AudioPlayerScreen(
+                          moodName: widget.moodName,
+                          assetImagePath: widget.assetImagePath,
+                          audioPath: widget.audioPath,
+                        ),
+                      ),
                     );
                   }),
               const SizedBox(

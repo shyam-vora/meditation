@@ -11,8 +11,8 @@ import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
 class RemindersScreen extends StatefulWidget {
   final String moodName;
   final String assetImagePath;
-  const RemindersScreen(
-      {super.key, required this.assetImagePath, required this.moodName});
+  final String audioPath;
+  const RemindersScreen({super.key, required this.assetImagePath,required this.moodName,required this.audioPath});
 
   @override
   State<RemindersScreen> createState() => _RemindersScreenState();
@@ -121,20 +121,19 @@ class _RemindersScreenState extends State<RemindersScreen> {
                 ],
               ),
             ),
-            RoundButton(
-                title: "SAVE",
-                onPressed: () async {
-                  MoodsModel newMood = MoodsModel(
-                    name: widget.moodName,
-                    assetImagePath: widget.assetImagePath,
-                  );
-                  await AppDatabase.instance.createMoods(newMood);
-                  context.showSnackbar(
+            RoundButton(title: "SAVE", onPressed: ()async {
+               MoodsModel newMood = MoodsModel(
+                      name: widget.moodName,
+                      assetImagePath: widget.assetImagePath,
+                      audioPath: widget.audioPath,
+                    );
+                    await AppDatabase.instance.createMoods(newMood);
+                     context.showSnackbar(
                     message: 'Mood Saved Successfully',
                     type: SnackbarMessageType.success,
                   );
                   context.push(const MainTabViewScreen());
-                }),
+            }),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

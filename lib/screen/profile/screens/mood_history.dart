@@ -24,7 +24,7 @@ class _MoodHistoryState extends State<MoodHistory> {
   Future<List<MoodsModel>?> _getMoodData() async {
     try {
       final moods = await AppDatabase.instance.realAllMoods();
-      if (moods == null || moods.isEmpty) {
+      if (moods.isEmpty) {
         return null;
       }
       return moods;
