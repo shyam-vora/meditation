@@ -6,6 +6,7 @@ import 'package:meditation/models/user_model.dart';
 import 'package:meditation/screen/login/startup_screen.dart';
 import 'package:meditation/services/auth.dart';
 import 'package:meditation/screen/admin/users_screen.dart';
+import 'package:meditation/screen/admin/admin_home_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -115,48 +116,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Text(
-                      'Recent Users',
-                      style: TextStyle(
-                        color: TColor.primaryText,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  FutureBuilder<List<UserModel>>(
-                    future: _usersFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(child: Text('No users found'));
-                      }
-
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          final user = snapshot.data![index];
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: TColor.primary,
-                              child: Text(
-                                user.name[0].toUpperCase(),
-                                style: TextStyle(color: TColor.primaryTextW),
-                              ),
-                            ),
-                            title: Text(user.name),
-                            subtitle: Text(user.email),
-                          );
-                        },
-                      );
-                    },
+                  SizedBox(
+                    height: 200,
+                    child: AdminHomeScreen(),
                   ),
                 ],
               ),

@@ -144,4 +144,19 @@ class AppDatabase {
     }
     return false;
   }
+
+  Future<List<MoodsModel>> getMoodsByUsage() async {
+    final db = await instance.database;
+    final result = await db.query(
+      'moods',
+      orderBy: 'count DESC',
+    );
+    return result.map((json) => MoodsModel.fromMap(json)).toList();
+  }
+
+  Future<int> getTotalMoodsPlayed() async {
+    final db = await instance.database;
+    final result = await db.rawQuery('SELECT SUM(count) as total FROM moods');
+    return (result.first['total'] as int?) ?? 0;
+  }
 }
