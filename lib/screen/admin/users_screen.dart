@@ -46,6 +46,7 @@ class _UsersScreenState extends State<UsersScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: TColor.primary,
+        elevation: 0,
         title: Text(
           'All Users',
           style: TextStyle(

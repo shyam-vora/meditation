@@ -36,6 +36,7 @@ class _MoodAnalysisScreenState extends State<MoodAnalysisScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: TColor.primary,
+        elevation: 0,
         title: Text(
           'Mood Analysis',
           style: TextStyle(

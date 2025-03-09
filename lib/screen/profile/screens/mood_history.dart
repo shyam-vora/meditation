@@ -24,22 +24,19 @@ class _MoodHistoryState extends State<MoodHistory> {
   Future<List<MoodsModel>?> _getMoodData() async {
     try {
       final moods = await AppDatabase.instance.realAllMoods();
-      if (moods.isEmpty) {
+      if (moods == null || moods.isEmpty) {
         return null;
       }
-      if (moods.isNotEmpty && moods.first != null) {
-        return moods.where((mood) => mood != null).toList() as List<MoodsModel>;
-      } else {
-        throw Exception("No mood data available");
-      }
+      return moods;
     } catch (e) {
+      debugPrint("Error fetching mood data: $e");
       throw Exception("Error fetching mood data: $e");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<List<MoodsModel>?>(
       future: _moodsList,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,88 +45,81 @@ class _MoodHistoryState extends State<MoodHistory> {
           return Center(
             child: Text('Error: ${snapshot.error}'),
           );
-        } else if (snapshot.hasData) {
-          if (snapshot.data == null) {
-            return const Text("No History");
-          }
-          List<MoodsModel> moodsList = snapshot.data!;
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Moods History",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
+        } else if (!snapshot.hasData || snapshot.data == null) {
+          return const Center(child: Text("No History"));
+        }
+
+        List<MoodsModel> moodsList = snapshot.data!;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Moods History",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
                   ),
                 ),
               ),
-              Flexible(
-                child: ListView.builder(
-                  itemCount: moodsList.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: ListTile(
-                        leading: moodsList[index].assetImagePath != null
-                            ? Image.asset(moodsList[index].assetImagePath!)
-                            : null,
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  moodsList[index].name,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+            ),
+            Flexible(
+              child: ListView.builder(
+                itemCount: moodsList.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: ListTile(
+                      leading: moodsList[index].assetImagePath != null
+                          ? Image.asset(moodsList[index].assetImagePath!)
+                          : null,
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                moodsList[index].name,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                Text(
-                                  'Played ${moodsList[index].count} times',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
+                              ),
+                              Text(
+                                'Played ${moodsList[index].count} times',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
                                 ),
-                              ],
-                            ),
-                            IconButton(
-                                onPressed: () async {
-                                  if (moodsList[index].id == null) return;
-                                  await appDatabase
-                                      .delete(moodsList[index].id!);
-                                  setState(() {
-                                    _moodsList = _getMoodData();
-                                  });
+                              ),
+                            ],
+                          ),
+                          IconButton(
+                              onPressed: () async {
+                                if (moodsList[index].id == null) return;
+                                await appDatabase.delete(moodsList[index].id!);
+                                setState(() {
+                                  _moodsList = _getMoodData();
+                                });
 
-                                  context.showSnackbar(
-                                    message: 'Deleted Successfully!',
-                                    type: SnackbarMessageType.success,
-                                  );
-                                },
-                                icon: const Icon(Icons.delete)),
-                          ],
-                        ),
+                                context.showSnackbar(
+                                  message: 'Deleted Successfully!',
+                                  type: SnackbarMessageType.success,
+                                );
+                              },
+                              icon: const Icon(Icons.delete)),
+                        ],
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
-            ],
-          );
-        } else {
-          return const Center(
-              child: Text(
-            'No moods history found.',
-          ));
-        }
+            ),
+          ],
+        );
       },
     );
   }

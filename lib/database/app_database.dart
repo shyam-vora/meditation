@@ -4,8 +4,9 @@ import 'package:meditation/models/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
+import '../models/suggestion_model.dart';
 
-const String fileName = 'moods_sqfliteddd4_db.db';
+const String fileName = 'moods_sqfsssliteddd4_db.db';
 
 class AppDatabase {
   AppDatabase._init();
@@ -44,6 +45,16 @@ class AppDatabase {
       )
     ''');
 
+    await db.execute('''
+      CREATE TABLE suggestions(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL,
+        image_path TEXT NOT NULL,
+        type TEXT NOT NULL
+      )
+    ''');
+
     // Initialize system admin user
     await db.insert(
         'users',
@@ -64,32 +75,38 @@ class AppDatabase {
 
   Future<void> createOrIncrementMood(MoodsModel moodsModel) async {
     final db = await database;
+    try {
+      final List<Map<String, dynamic>> result = await db.query(
+        'moods',
+        where: 'name = ?',
+        whereArgs: [moodsModel.name],
+      );
 
-    // Check if mood exists
-    final List<Map<String, dynamic>> result = await db.query(
-      'moods',
-      where: 'name = ?',
-      whereArgs: [moodsModel.name],
-    );
-
-    if (result.isEmpty) {
-      // Insert new mood
-      await db.insert('moods', moodsModel.toMap(),
-          conflictAlgorithm: ConflictAlgorithm.replace);
-    } else {
-      // Increment count
-      await db.rawUpdate('''
-        UPDATE moods 
-        SET count = count + 1 
-        WHERE name = ?
-      ''', [moodsModel.name]);
+      if (result.isEmpty) {
+        await db.insert(
+          'moods',
+          moodsModel.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      } else {
+        await db.rawUpdate(
+          'UPDATE moods SET count = count + 1 WHERE name = ?',
+          [moodsModel.name],
+        );
+      }
+    } catch (e) {
+      debugPrint("Error in createOrIncrementMood: $e");
+      rethrow;
     }
   }
 
-  Future<List<MoodsModel?>> realAllMoods() async {
+  Future<List<MoodsModel>> realAllMoods() async {
     final db = await instance.database;
     final result = await db.query('moods');
-    return result.map((json) => MoodsModel.fromMap(json)).toList();
+    return result
+        .where((map) => map.isNotEmpty)
+        .map((json) => MoodsModel.fromMap(json))
+        .toList();
   }
 
   Future<void> close() async {
@@ -158,5 +175,36 @@ class AppDatabase {
     final db = await instance.database;
     final result = await db.rawQuery('SELECT SUM(count) as total FROM moods');
     return (result.first['total'] as int?) ?? 0;
+  }
+
+  // CRUD Operations for Suggestions
+  Future<int> createSuggestion(Suggestion suggestion) async {
+    final db = await database;
+    return await db.insert('suggestions', suggestion.toMap());
+  }
+
+  Future<List<Suggestion>> getAllSuggestions() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('suggestions');
+    return List.generate(maps.length, (i) => Suggestion.fromMap(maps[i]));
+  }
+
+  Future<int> updateSuggestion(Suggestion suggestion) async {
+    final db = await database;
+    return await db.update(
+      'suggestions',
+      suggestion.toMap(),
+      where: 'id = ?',
+      whereArgs: [suggestion.id],
+    );
+  }
+
+  Future<int> deleteSuggestion(int id) async {
+    final db = await database;
+    return await db.delete(
+      'suggestions',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }

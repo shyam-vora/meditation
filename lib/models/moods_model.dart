@@ -45,10 +45,10 @@ class MoodsModel {
 
   factory MoodsModel.fromMap(Map<String, dynamic> map) {
     return MoodsModel(
-      id: map['id'] as int,
-      name: map['name'] as String,
-      assetImagePath: map['assetImagePath'] as String,
-      count: map['count'] as int,
+      id: map['id'] as int?,
+      name: map['name'] as String? ?? '',
+      assetImagePath: map['assetImagePath'] as String?,
+      count: (map['count'] as int?) ?? 1,
     );
   }
 

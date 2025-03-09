@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/common/common_widget/loading_warpper.dart';
 import 'package:meditation/database/app_database.dart';
+import 'package:meditation/models/user_model.dart';
 import 'package:meditation/screen/admin/admin_dashboard_screen.dart';
 import 'package:meditation/screen/login/startup_screen.dart';
 import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
@@ -32,6 +33,16 @@ class _MyAppState extends State<MyApp> {
 
   Future<String> continueWithLoggedInSession() async {
     try {
+      //TODO: remove me
+      // await AppDatabase.instance.insertUser(
+      //   UserModel(
+      //     name: "krupal",
+      //     email: "admin@system.com1",
+      //     password: "admin123",
+      //     isAdmin: false,
+      //   ),
+      // );
+
       final isLoggedIn = await AuthService.isLoggedIn();
       if (isLoggedIn) {
         final userEmail = await AuthService.getLoggedInUserEmail();

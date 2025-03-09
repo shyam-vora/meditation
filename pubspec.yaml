@@ -40,6 +40,8 @@ dependencies:
   path_provider:
   shared_preferences: ^2.2.3
   fl_chart: ^0.65.0
+  image_picker: ^1.0.4
+  flutter_staggered_animations: ^1.1.1
 
 dev_dependencies:
   flutter_test:
