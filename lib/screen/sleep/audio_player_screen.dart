@@ -82,6 +82,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
   @override
   void dispose() {
     _waveController.dispose();
+    _audioPlayer.stop(); // Stop audio playback before disposing
     _audioPlayer.dispose();
     super.dispose();
   }
