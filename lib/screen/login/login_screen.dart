@@ -4,6 +4,7 @@ import 'package:meditation/common/common_widget/round_button.dart';
 import 'package:meditation/common/common_widget/round_text_field.dart';
 import 'package:meditation/common/show_snackbar_extension.dart';
 import 'package:meditation/database/app_database.dart';
+import 'package:meditation/screen/admin/admin_dashboard_screen.dart';
 import 'package:meditation/screen/login/sign_up_screen.dart';
 import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
 import 'package:meditation/services/auth.dart';
@@ -17,8 +18,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailController = TextEditingController(text: "admin@system.com");
+  final passwordController = TextEditingController(text: "admin123");
 
   @override
   Widget build(BuildContext context) {
@@ -198,12 +199,29 @@ class _LoginScreenState extends State<LoginScreen> {
                   final String? errorMessage = await _login();
 
                   if (errorMessage == null) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const MainTabViewScreen()),
-                      (_) => true,
-                    );
+                    // check if admin user
+                    final isAdmin = await AppDatabase.instance
+                        .isAdminUser(emailController.text);
+
+                    // save login state
+                    await AuthService.saveUserLogin(emailController.text);
+
+                    // navigate based on user type
+                    if (isAdmin) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const AdminDashboardScreen()),
+                        (_) => true,
+                      );
+                    } else {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const MainTabViewScreen()),
+                        (_) => true,
+                      );
+                    }
 
                     context.showSnackbar(message: 'You are Logged in');
                   } else {
@@ -274,8 +292,29 @@ class _LoginScreenState extends State<LoginScreen> {
       return 'Invalid password';
     }
 
+    // Check if admin user
+    final isAdmin = await AppDatabase.instance.isAdminUser(user.email);
+
     // Save login state
     await AuthService.saveUserLogin(user.email);
+
+    // Navigate based on user type
+    if (isAdmin) {
+      if (!mounted) return null;
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const AdminDashboardScreen()),
+        (route) => false,
+      );
+    } else {
+      if (!mounted) return null;
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const MainTabViewScreen()),
+        (route) => false,
+      );
+    }
+
     return null;
   }
 }

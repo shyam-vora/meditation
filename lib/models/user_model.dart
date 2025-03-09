@@ -5,12 +5,14 @@ class UserModel {
   final String name;
   final String email;
   final String password;
+  final bool isAdmin;
 
   UserModel({
     this.id,
     required this.name,
     required this.email,
     required this.password,
+    this.isAdmin = false,
   });
 
   UserModel copyWith({
@@ -18,12 +20,14 @@ class UserModel {
     String? email,
     String? password,
     int? id,
+    bool? isAdmin,
   }) {
     return UserModel(
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
       password: password ?? this.password,
+      isAdmin: isAdmin ?? this.isAdmin,
     );
   }
 
@@ -32,6 +36,7 @@ class UserModel {
       'username': name,
       'email': email,
       'password': password,
+      'is_admin': isAdmin ? 1 : 0,
     };
   }
 
@@ -41,12 +46,13 @@ class UserModel {
       name: map['username'] as String,
       email: map['email'] as String,
       password: map['password'] as String,
+      isAdmin: map['is_admin'] == 1,
     );
   }
 
   @override
   String toString() =>
-      'UserModel(name: $name, email: $email, password: $password)';
+      'UserModel(name: $name, email: $email, password: $password, isAdmin: $isAdmin)';
 
   @override
   bool operator ==(covariant UserModel other) {
@@ -54,11 +60,13 @@ class UserModel {
 
     return other.name == name &&
         other.email == email &&
-        other.password == password;
+        other.password == password &&
+        other.isAdmin == isAdmin;
   }
 
   @override
-  int get hashCode => name.hashCode ^ email.hashCode ^ password.hashCode;
+  int get hashCode =>
+      name.hashCode ^ email.hashCode ^ password.hashCode ^ isAdmin.hashCode;
 
   String toJson() => json.encode(toMap());
 

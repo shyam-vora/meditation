@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/common/common_widget/loading_warpper.dart';
 import 'package:meditation/database/app_database.dart';
+import 'package:meditation/screen/admin/admin_dashboard_screen.dart';
 import 'package:meditation/screen/login/startup_screen.dart';
 import 'package:meditation/screen/main_tabview/main_tabview_screen.dart';
 import 'package:meditation/services/auth.dart';
@@ -29,20 +30,25 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  Future<bool> continueWithLoggedInSession() async {
+  Future<String> continueWithLoggedInSession() async {
     try {
       final isLoggedIn = await AuthService.isLoggedIn();
       if (isLoggedIn) {
         final userEmail = await AuthService.getLoggedInUserEmail();
         final user = await AppDatabase.instance.getUserByEmail(userEmail!);
         if (user != null) {
-          return true;
+          final isAdmin = user.isAdmin;
+          if (isAdmin) {
+            return 'admin';
+          } else {
+            return 'user';
+          }
         }
       }
-      return false;
+      return 'not-logged-in';
     } catch (e) {
       log(e.toString(), name: 'MyApp');
-      return false;
+      return 'not-logged-in';
     }
   }
 
@@ -59,14 +65,17 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: TColor.primary),
         useMaterial3: false,
       ),
-      home: FutureBuilder<bool>(
+      home: FutureBuilder<String>(
         future: continueWithLoggedInSession(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
-              return snapshot.data!
-                  ? const MainTabViewScreen()
-                  : const StartUpScreen();
+              return {
+                    'user': const MainTabViewScreen(),
+                    'admin': const AdminDashboardScreen(),
+                    'not-logged-in': const StartUpScreen(),
+                  }[snapshot.data] ??
+                  const StartUpScreen();
             }
           }
           return const LoadingWrapper();

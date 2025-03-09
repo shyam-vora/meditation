@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 
-const String fileName = 'moods_sqflite34_db.db';
+const String fileName = 'moods_sqfliteddd4_db.db';
 
 class AppDatabase {
   AppDatabase._init();
@@ -30,7 +30,8 @@ class AppDatabase {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL,
         email TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
+        password TEXT NOT NULL,
+        is_admin INTEGER DEFAULT 0
       )
     ''');
 
@@ -42,6 +43,17 @@ class AppDatabase {
         count INTEGER DEFAULT 1
       )
     ''');
+
+    // Initialize system admin user
+    await db.insert(
+        'users',
+        {
+          'username': 'System Admin',
+          'email': 'admin@system.com',
+          'password': 'admin123',
+          'is_admin': 1
+        },
+        conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
   Future<void> createMoods(MoodsModel moodsModel) async {
@@ -102,7 +114,7 @@ class AppDatabase {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'users',
-      columns: ['id', 'username', 'email', 'password'],
+      columns: ['id', 'username', 'email', 'password', 'is_admin'],
       where: 'email = ?',
       whereArgs: [email],
     );
@@ -116,5 +128,20 @@ class AppDatabase {
   Future<int> insertUser(UserModel user) async {
     final db = await instance.database;
     return await db.insert('users', user.toMap());
+  }
+
+  Future<bool> isAdminUser(String email) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'users',
+      columns: ['is_admin'],
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+
+    if (maps.isNotEmpty) {
+      return maps.first['is_admin'] == 1;
+    }
+    return false;
   }
 }
