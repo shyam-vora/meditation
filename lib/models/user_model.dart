@@ -6,6 +6,7 @@ class UserModel {
   final String email;
   final String password;
   final bool isAdmin;
+  final String? profilePicture;
 
   UserModel({
     this.id,
@@ -13,6 +14,7 @@ class UserModel {
     required this.email,
     required this.password,
     this.isAdmin = false,
+    this.profilePicture,
   });
 
   UserModel copyWith({
@@ -21,6 +23,7 @@ class UserModel {
     String? password,
     int? id,
     bool? isAdmin,
+    String? profilePicture,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -28,6 +31,7 @@ class UserModel {
       email: email ?? this.email,
       password: password ?? this.password,
       isAdmin: isAdmin ?? this.isAdmin,
+      profilePicture: profilePicture ?? this.profilePicture,
     );
   }
 
@@ -37,6 +41,7 @@ class UserModel {
       'email': email,
       'password': password,
       'is_admin': isAdmin ? 1 : 0,
+      'profile_picture': profilePicture,
     };
   }
 
@@ -47,12 +52,13 @@ class UserModel {
       email: map['email'] as String,
       password: map['password'] as String,
       isAdmin: map['is_admin'] == 1,
+      profilePicture: map['profile_picture'] as String?,
     );
   }
 
   @override
   String toString() =>
-      'UserModel(name: $name, email: $email, password: $password, isAdmin: $isAdmin)';
+      'UserModel(name: $name, email: $email, password: $password, isAdmin: $isAdmin, profilePicture: $profilePicture)';
 
   @override
   bool operator ==(covariant UserModel other) {
@@ -61,12 +67,17 @@ class UserModel {
     return other.name == name &&
         other.email == email &&
         other.password == password &&
-        other.isAdmin == isAdmin;
+        other.isAdmin == isAdmin &&
+        other.profilePicture == profilePicture;
   }
 
   @override
   int get hashCode =>
-      name.hashCode ^ email.hashCode ^ password.hashCode ^ isAdmin.hashCode;
+      name.hashCode ^
+      email.hashCode ^
+      password.hashCode ^
+      isAdmin.hashCode ^
+      profilePicture.hashCode;
 
   String toJson() => json.encode(toMap());
 

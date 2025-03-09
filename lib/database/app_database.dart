@@ -3,10 +3,9 @@ import 'package:meditation/models/moods_model.dart';
 import 'package:meditation/models/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqlite_api.dart';
 import '../models/suggestion_model.dart';
 
-const String fileName = 'moods_sqfsssliteddd4_db.db';
+const String fileName = 'moods4_db.db';
 
 class AppDatabase {
   AppDatabase._init();
@@ -32,7 +31,8 @@ class AppDatabase {
         username TEXT NOT NULL,
         email TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
-        is_admin INTEGER DEFAULT 0
+        is_admin INTEGER DEFAULT 0,
+        profile_picture TEXT
       )
     ''');
 
@@ -131,7 +131,14 @@ class AppDatabase {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'users',
-      columns: ['id', 'username', 'email', 'password', 'is_admin'],
+      columns: [
+        'id',
+        'username',
+        'email',
+        'password',
+        'is_admin',
+        'profile_picture'
+      ],
       where: 'email = ?',
       whereArgs: [email],
     );
@@ -145,6 +152,25 @@ class AppDatabase {
   Future<int> insertUser(UserModel user) async {
     final db = await instance.database;
     return await db.insert('users', user.toMap());
+  }
+
+  Future<void> updateUser(UserModel user) async {
+    final db = await database;
+    await db.update(
+      'users',
+      user.toMap(),
+      where: 'id = ?',
+      whereArgs: [user.id],
+    );
+  }
+
+  Future<void> deleteUser(int id) async {
+    final db = await database;
+    await db.delete(
+      'users',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<bool> isAdminUser(String email) async {
