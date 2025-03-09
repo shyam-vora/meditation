@@ -1,8 +1,7 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:meditation/common/color_extension.dart';
+import 'package:meditation/screen/admin/terms_screen.dart';
 import 'package:meditation/screen/profile/screens/mood_history.dart';
 import 'package:meditation/services/auth.dart';
 import 'package:meditation/screen/profile/screens/edit_profile_screen.dart';
@@ -13,7 +12,7 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -63,7 +62,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
       if (result == true) {
-        // Refresh profile data
         setState(() {
           _userModel = _getUserData();
         });
@@ -139,38 +137,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final double gap = screenSize.height * 0.15;
-
     return Scaffold(
-      body: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: screenSize.height,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: screenSize.height * 0.1),
-              FutureBuilder<UserModel?>(
-                future: _userModel,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  }
-                  if (snapshot.hasData && snapshot.data != null) {
-                    return _buildProfileSection(snapshot.data!);
-                  }
-                  return const Text('Failed to load profile');
-                },
-              ),
-              SizedBox(
-                height: screenSize.height * 0.7 - gap,
-                child: const MoodHistory(),
-              ),
-            ],
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: TColor.primary,
+        elevation: 0,
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            color: TColor.primaryTextW,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
           ),
         ),
+      ),
+      body: ListView(
+        children: [
+          FutureBuilder<UserModel?>(
+            future: _userModel,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasData && snapshot.data != null) {
+                return _buildProfileSection(snapshot.data!);
+              }
+              return const Text('Failed to load profile');
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.mood),
+            title: const Text('Mood History'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MoodHistory()),
+              );
+            },
+          ),
+          const Divider(),
+          const ListTile(
+            leading: Icon(Icons.info_outline),
+            title: Text('Version'),
+            subtitle: Text('v1.0.0'),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.description_outlined),
+            title: const Text('Terms & Conditions'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const TermsScreen()),
+              );
+            },
+          ),
+          const Divider(),
+        ],
       ),
     );
   }
