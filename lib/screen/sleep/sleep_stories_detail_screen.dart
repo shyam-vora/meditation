@@ -265,9 +265,9 @@ class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
                       name: widget.moodName,
                       assetImagePath: widget.assetImagePath,
                     );
-                    await appDatabase.createMoods(newMood);
+                    await appDatabase.createOrIncrementMood(newMood);
                     context.showSnackbar(
-                      message: "Mood Saved Successfully",
+                      message: "Mood Tracked Successfully",
                       type: SnackbarMessageType.success,
                     );
                   }),

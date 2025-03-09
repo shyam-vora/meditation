@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 
-const String fileName = 'moods_sqflite_db.db';
+const String fileName = 'moods_sqflite34_db.db';
 
 class AppDatabase {
   AppDatabase._init();
@@ -36,9 +36,10 @@ class AppDatabase {
 
     await db.execute('''
       CREATE TABLE moods (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      assetImagePath TEXT DEFAULT NULL
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE,
+        assetImagePath TEXT DEFAULT NULL,
+        count INTEGER DEFAULT 1
       )
     ''');
   }
@@ -47,6 +48,30 @@ class AppDatabase {
     final db = await database;
     await db.insert('moods', moodsModel.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<void> createOrIncrementMood(MoodsModel moodsModel) async {
+    final db = await database;
+
+    // Check if mood exists
+    final List<Map<String, dynamic>> result = await db.query(
+      'moods',
+      where: 'name = ?',
+      whereArgs: [moodsModel.name],
+    );
+
+    if (result.isEmpty) {
+      // Insert new mood
+      await db.insert('moods', moodsModel.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    } else {
+      // Increment count
+      await db.rawUpdate('''
+        UPDATE moods 
+        SET count = count + 1 
+        WHERE name = ?
+      ''', [moodsModel.name]);
+    }
   }
 
   Future<List<MoodsModel?>> realAllMoods() async {
