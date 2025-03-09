@@ -10,6 +10,7 @@ import 'package:meditation/services/auth.dart';
 import 'package:meditation/screen/admin/users_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:meditation/screen/admin/mood_analysis_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -299,6 +300,20 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (_) => const TermsScreen()),
+                                  );
+                                },
+                              ),
+                              _buildEnhancedDashboardItem(
+                                'Mood Analytics',
+                                Icons.analytics_outlined,
+                                'View detailed mood usage analytics',
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          const MoodAnalysisScreen(),
+                                    ),
                                   );
                                 },
                               ),
