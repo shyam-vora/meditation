@@ -26,15 +26,22 @@ class _MeditateScreenState extends State<MeditateScreen> {
     {
       "image": "assets/img/m1.png",
       "title": "7 Days of Calm",
+      "audioPath": "assets/audio/music1.mp3",
     },
     {
       "image": "assets/img/m2.png",
       "title": "Anxiet Release",
+      "audioPath": "assets/audio/music2.mp3",
     },
-    {"image": "assets/img/m4.png", "title": "Reduce Anxiety"},
+    {
+      "image": "assets/img/m4.png",
+      "title": "Reduce Anxiety",
+      "audioPath": "assets/audio/music3.mp3",
+    },
     {
       "image": "assets/img/m3.png",
       "title": "Happiness",
+      "audioPath": "assets/audio/music4.mp3",
     }
   ];
 
