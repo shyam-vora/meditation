@@ -33,16 +33,6 @@ class _MyAppState extends State<MyApp> {
 
   Future<String> continueWithLoggedInSession() async {
     try {
-      //TODO: remove me
-      // await AppDatabase.instance.insertUser(
-      //   UserModel(
-      //     name: "krupal",
-      //     email: "admin@system.com1",
-      //     password: "admin123",
-      //     isAdmin: false,
-      //   ),
-      // );
-
       final isLoggedIn = await AuthService.isLoggedIn();
       if (isLoggedIn) {
         final userEmail = await AuthService.getLoggedInUserEmail();

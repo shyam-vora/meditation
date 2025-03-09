@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/database/app_database.dart';
@@ -22,12 +24,22 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   Future<void> _loadUsers() async {
-    final db = await AppDatabase.instance.database;
-    final users = await db.query('users');
-    setState(() {
-      _users = users.map((map) => UserModel.fromMap(map)).toList();
-      _filteredUsers = _users;
-    });
+    try {
+      final db = await AppDatabase.instance.database;
+      final users = await db.query('users');
+      setState(() {
+        _users = users.map((map) => UserModel.fromMap(map)).toList();
+        _filteredUsers = _users;
+      });
+    } catch (e) {
+      debugPrint('Error loading users: $e');
+      // Show error to user
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to load users')),
+        );
+      }
+    }
   }
 
   void _filterUsers(String query) {
@@ -87,10 +99,31 @@ class _UsersScreenState extends State<UsersScreen> {
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundColor: TColor.primary,
-                      child: Text(
-                        user.name[0].toUpperCase(),
-                        style: TextStyle(color: TColor.primaryTextW),
-                      ),
+                      child: user.profilePicture != null &&
+                              user.profilePicture!.isNotEmpty
+                          ? ClipOval(
+                              child: Image.file(
+                                File(user.profilePicture!),
+                                width: 40,
+                                height: 40,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Text(
+                                    user.name.isNotEmpty
+                                        ? user.name[0].toUpperCase()
+                                        : '?',
+                                    style:
+                                        TextStyle(color: TColor.primaryTextW),
+                                  );
+                                },
+                              ),
+                            )
+                          : Text(
+                              user.name.isNotEmpty
+                                  ? user.name[0].toUpperCase()
+                                  : '?',
+                              style: TextStyle(color: TColor.primaryTextW),
+                            ),
                     ),
                     title: Text(
                       user.name,

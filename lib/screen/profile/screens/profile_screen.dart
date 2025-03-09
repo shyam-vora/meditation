@@ -2,11 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/screen/admin/terms_screen.dart';
+import 'package:meditation/screen/login/startup_screen.dart';
 import 'package:meditation/screen/profile/screens/mood_history.dart';
 import 'package:meditation/services/auth.dart';
 import 'package:meditation/screen/profile/screens/edit_profile_screen.dart';
 import 'package:meditation/database/app_database.dart';
 import 'package:meditation/models/user_model.dart';
+import 'package:meditation/screen/profile/screens/view_suggestions_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -41,7 +43,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       await AuthService.logout();
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/login');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const StartUpScreen()),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -173,6 +178,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const MoodHistory()),
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.lightbulb_outline),
+            title: const Text('Meditation Suggestions'),
+            subtitle: const Text('View expert suggestions'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ViewSuggestionsScreen(),
+                ),
               );
             },
           ),
