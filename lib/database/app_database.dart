@@ -6,7 +6,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 const String fileName = 'moods_sqflite_db.db';
-const String tableName = 'moods';
 
 class AppDatabase {
   AppDatabase._init();
@@ -36,7 +35,7 @@ class AppDatabase {
     ''');
 
     await db.execute('''
-      CREATE TABLE $tableName (
+      CREATE TABLE moods (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
       assetImagePath TEXT DEFAULT NULL
@@ -46,13 +45,13 @@ class AppDatabase {
 
   Future<void> createMoods(MoodsModel moodsModel) async {
     final db = await database;
-    await db.insert(tableName, moodsModel.toMap(),
+    await db.insert('moods', moodsModel.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<List<MoodsModel?>> realAllMoods() async {
     final db = await instance.database;
-    final result = await db.query(tableName);
+    final result = await db.query('moods');
     return result.map((json) => MoodsModel.fromMap(json)).toList();
   }
 
@@ -65,7 +64,7 @@ class AppDatabase {
     final db = await database;
     try {
       await db.delete(
-        tableName,
+        'moods',
         where: "id = ?", // Use the column name here
         whereArgs: [id], // Pass the id value as a parameter
       );
