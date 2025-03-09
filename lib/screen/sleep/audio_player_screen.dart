@@ -30,7 +30,8 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   }
 
   Future<void> _setupAudio() async {
-    _audioPlayer.setSource(AssetSource(widget.audioPath));
+    // Set the source using the asset path
+    await _audioPlayer.setSource(AssetSource(widget.audioPath));
 
     _audioPlayer.onDurationChanged.listen((newDuration) {
       setState(() {
@@ -53,20 +54,31 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   }
 
   void _togglePlayPause() async {
-    if (isPlaying) {
-      await _audioPlayer.pause();
-    } else {
-      await _audioPlayer.play(AssetSource(widget.audioPath));
+    try {
+      if (isPlaying) {
+        await _audioPlayer.pause();
+      } else {
+        await _audioPlayer.resume();
+      }
+      setState(() {
+        isPlaying = !isPlaying;
+      });
+    } catch (e) {
+      debugPrint('Error playing audio: $e');
     }
-    setState(() {
-      isPlaying = !isPlaying;
-    });
   }
 
   @override
   void dispose() {
     _audioPlayer.dispose();
     super.dispose();
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$minutes:$seconds";
   }
 
   @override
@@ -91,23 +103,22 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
           ),
           const SizedBox(height: 10),
           Text(
-            "${_position.inMinutes}:${_position.inSeconds.remainder(60).toString().padLeft(2, '0')} / "
-            "${_duration.inMinutes}:${_duration.inSeconds.remainder(60).toString().padLeft(2, '0')}",
+            "${_formatDuration(_position)} / ${_formatDuration(_duration)}",
           ),
           Slider(
             min: 0,
             max: _duration.inSeconds.toDouble(),
             value: _position.inSeconds.toDouble(),
             onChanged: (value) async {
-              final newPosition = Duration(seconds: value.toInt());
-              await _audioPlayer.seek(newPosition);
-              setState(() {
-                _position = newPosition;
-              });
+              final position = Duration(seconds: value.toInt());
+              await _audioPlayer.seek(position);
             },
           ),
           IconButton(
-            icon: Icon(isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled, size: 64),
+            icon: Icon(
+              isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled,
+              size: 64,
+            ),
             onPressed: _togglePlayPause,
           ),
         ],

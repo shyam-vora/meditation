@@ -271,7 +271,6 @@ class _SleepStoriesDetailScreenState extends State<SleepStoriesDetailScreen> {
                     MoodsModel newMood = MoodsModel(
                       name: widget.moodName,
                       assetImagePath: widget.assetImagePath,
-                      audioPath: widget.audioPath,
                     );
                     await appDatabase.createOrIncrementMood(newMood);
                     context.showSnackbar(

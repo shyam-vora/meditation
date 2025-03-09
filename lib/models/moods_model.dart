@@ -5,13 +5,13 @@ class MoodsModel {
   final int? id;
   final String name;
   final String? assetImagePath;
-  final int count; // New field
+  final int count;
 
   MoodsModel({
     this.id,
     required this.name,
     this.assetImagePath,
-    this.count = 1, // Default to 1
+    this.count = 1,
   });
 
   MoodsModel copyWith({
@@ -19,7 +19,6 @@ class MoodsModel {
     String? name,
     String? assetImagePath,
     int? count,
-    String? audioPath,
   }) {
     return MoodsModel(
       id: id ?? this.id,
@@ -27,12 +26,6 @@ class MoodsModel {
       assetImagePath: assetImagePath ?? this.assetImagePath,
       count: count ?? this.count,
     );
-  }
-
-  // Method to generate current timestamp when the object is created
-  static String getCurrentTimestamp() {
-    final now = DateTime.now();
-    return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
   }
 
   Map<String, dynamic> toMap() {

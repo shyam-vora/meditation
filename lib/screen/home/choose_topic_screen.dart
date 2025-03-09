@@ -148,7 +148,14 @@ class _ChooseTopicScreenState extends State<ChooseTopicScreen> {
               return InkWell(
                 borderRadius: BorderRadius.circular(10),
                 onTap: () {
-                  context.push( RemindersScreen(assetImagePath: dataArr[index]["image"] ,moodName:  dataArr[index]["title"],));
+                  context.push(
+                    RemindersScreen(
+                      assetImagePath: dataArr[index]["image"],
+                      moodName: dataArr[index]["title"],
+                      audioPath:
+                          'assets/audio/meditation.mp3', //TODO: Add audio path
+                    ),
+                  );
                 },
                 child: Container(
                   height: height,

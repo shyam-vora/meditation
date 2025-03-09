@@ -52,13 +52,13 @@ class _MeditateScreenState extends State<MeditateScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                              "Meditate",
-                              style: TextStyle(
-                                color: TColor.primaryText,
-                                fontSize: 28,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
+                        "Meditate",
+                        style: TextStyle(
+                          color: TColor.primaryText,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                       const SizedBox(
                         height: 15,
                       ),
@@ -76,30 +76,31 @@ class _MeditateScreenState extends State<MeditateScreen> {
             SizedBox(
               height: 120,
               child: ListView.separated(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                scrollDirection: Axis.horizontal,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     var cObj = catArr[index];
                     return InkWell(
                       onTap: () {
                         selectIndex = index;
-                         setState(() {});
+                        setState(() {});
                       },
                       child: Column(children: [
                         Container(
                           width: 55,
                           height: 55,
                           decoration: BoxDecoration(
-                              color: selectIndex ==                                   index
+                              color: selectIndex == index
                                   ? TColor.primary
                                   : const Color(0xffA0A3B1),
                               borderRadius: BorderRadius.circular(20)),
                           alignment: Alignment.center,
                           child: Image.asset(
-                           cObj["icon"]  ,
+                            cObj["icon"],
                             width: 25,
                             height: 25,
-                            color: Colors.white ,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(
@@ -108,7 +109,8 @@ class _MeditateScreenState extends State<MeditateScreen> {
                         Text(
                           cObj["title"],
                           style: TextStyle(
-                            color: selectIndex == index ? TColor.primary
+                            color: selectIndex == index
+                                ? TColor.primary
                                 : TColor.secondaryText,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -120,7 +122,7 @@ class _MeditateScreenState extends State<MeditateScreen> {
                   separatorBuilder: (context, index) => const SizedBox(
                         width: 20,
                       ),
-                  itemCount: catArr.length ),
+                  itemCount: catArr.length),
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -169,9 +171,7 @@ class _MeditateScreenState extends State<MeditateScreen> {
                           ),
                         ),
                         InkWell(
-                          onTap: () {
-                            
-                          },
+                          onTap: () {},
                           child: Image.asset(
                             "assets/img/play_black.png",
                             width: 40,
@@ -200,7 +200,11 @@ class _MeditateScreenState extends State<MeditateScreen> {
                 return InkWell(
                   borderRadius: BorderRadius.circular(10),
                   onTap: () {
-                    context.push( RemindersScreen(assetImagePath: dataArr[index]["image"] ,moodName:  dataArr[index]["title"],));
+                    context.push(RemindersScreen(
+                      assetImagePath: dataArr[index]["image"],
+                      moodName: dataArr[index]["title"],
+                      audioPath: dataArr[index]["audioPath"],
+                    ));
                   },
                   child: Container(
                     height: height,
