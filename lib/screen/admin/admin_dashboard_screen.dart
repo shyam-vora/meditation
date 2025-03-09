@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:meditation/common/color_extension.dart';
-import 'package:meditation/common/common_widget/round_button.dart';
 import 'package:meditation/database/app_database.dart';
 import 'package:meditation/models/moods_model.dart';
 import 'package:meditation/models/user_model.dart';
 import 'package:meditation/screen/login/startup_screen.dart';
 import 'package:meditation/services/auth.dart';
+import 'package:meditation/screen/admin/users_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -31,7 +31,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   Future<List<UserModel>> _loadUsers() async {
     final db = await AppDatabase.instance.database;
-    final users = await db.query('users', where: 'is_admin != 1');
+    final users =
+        await db.query('users'); // Remove the where clause to get all users
     return users.map((map) => UserModel.fromMap(map)).toList();
   }
 
@@ -85,6 +86,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       _buildStatCard(
                         'Total Users',
                         _usersFuture.then((users) => users.length.toString()),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const UsersScreen()),
+                          );
+                        },
                       ),
                       const SizedBox(width: 20),
                       _buildStatCard(
@@ -159,39 +167,43 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
-  Widget _buildStatCard(String title, Future<String> valueFuture) {
+  Widget _buildStatCard(String title, Future<String> valueFuture,
+      {VoidCallback? onTap}) {
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: TColor.primaryTextW,
-                fontSize: 16,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  color: TColor.primaryTextW,
+                  fontSize: 16,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            FutureBuilder<String>(
-              future: valueFuture,
-              builder: (context, snapshot) {
-                return Text(
-                  snapshot.data ?? '0',
-                  style: TextStyle(
-                    color: TColor.primaryTextW,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              },
-            ),
-          ],
+              const SizedBox(height: 10),
+              FutureBuilder<String>(
+                future: valueFuture,
+                builder: (context, snapshot) {
+                  return Text(
+                    snapshot.data ?? '0',
+                    style: TextStyle(
+                      color: TColor.primaryTextW,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
