@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:meditation/models/moods_model.dart';
+import 'package:meditation/models/notification_model.dart';
 import 'package:meditation/models/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/suggestion_model.dart';
 
-const String fileName = 'moods4_db.db';
+const String fileName = 'moods44gdyh_db.db';
 
 class AppDatabase {
   AppDatabase._init();
@@ -52,6 +53,15 @@ class AppDatabase {
         description TEXT NOT NULL,
         image_path TEXT NOT NULL,
         type TEXT NOT NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE notifications(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        message TEXT NOT NULL,
+        type TEXT NOT NULL,
+        created_on TEXT NOT NULL
       )
     ''');
 
@@ -229,6 +239,39 @@ class AppDatabase {
     final db = await database;
     return await db.delete(
       'suggestions',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // CRUD Operations for Notifications
+  Future<int> createNotification(NotificationModel notification) async {
+    final db = await database;
+    return await db.insert('notifications', notification.toMap());
+  }
+
+  Future<List<NotificationModel>> getAllNotifications() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps =
+        await db.query('notifications', orderBy: 'created_on DESC');
+    return List.generate(
+        maps.length, (i) => NotificationModel.fromMap(maps[i]));
+  }
+
+  Future<int> updateNotification(NotificationModel notification) async {
+    final db = await database;
+    return await db.update(
+      'notifications',
+      notification.toMap(),
+      where: 'id = ?',
+      whereArgs: [notification.id],
+    );
+  }
+
+  Future<int> deleteNotification(int id) async {
+    final db = await database;
+    return await db.delete(
+      'notifications',
       where: 'id = ?',
       whereArgs: [id],
     );

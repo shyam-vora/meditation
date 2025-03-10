@@ -3,6 +3,7 @@ import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/database/app_database.dart';
 import 'package:meditation/models/moods_model.dart';
 import 'package:meditation/models/user_model.dart';
+import 'package:meditation/screen/admin/notifications/admin_notifications_screen.dart';
 import 'package:meditation/screen/admin/terms_screen.dart';
 import 'package:meditation/screen/login/startup_screen.dart';
 import 'package:meditation/screens/admin/manage_suggestions_screen.dart';
@@ -163,6 +164,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             fontWeight: FontWeight.w700,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications, color: TColor.primaryTextW),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AdminNotificationsScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: AnimationLimiter(
         child: Column(

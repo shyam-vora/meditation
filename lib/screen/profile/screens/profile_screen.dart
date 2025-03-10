@@ -4,6 +4,7 @@ import 'package:meditation/common/color_extension.dart';
 import 'package:meditation/screen/admin/terms_screen.dart';
 import 'package:meditation/screen/login/startup_screen.dart';
 import 'package:meditation/screen/profile/screens/mood_history.dart';
+import 'package:meditation/screen/profile/screens/user_notifications_screen.dart';
 import 'package:meditation/services/auth.dart';
 import 'package:meditation/screen/profile/screens/edit_profile_screen.dart';
 import 'package:meditation/database/app_database.dart';
@@ -155,6 +156,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             fontWeight: FontWeight.w700,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UserNotificationsScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: ListView(
         children: [
