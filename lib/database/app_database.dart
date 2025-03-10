@@ -6,7 +6,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/suggestion_model.dart';
 
-const String fileName = 'moods44gdyh_db.db';
+const String fileName = 'moods44gdyddh_db.db';
 
 class AppDatabase {
   AppDatabase._init();
@@ -42,19 +42,21 @@ class AppDatabase {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT UNIQUE,
         assetImagePath TEXT DEFAULT NULL,
-        count INTEGER DEFAULT 1
+        count INTEGER DEFAULT 1,
+        selectedTime TEXT DEFAULT NULL,
+        selectedDays TEXT DEFAULT NULL
       )
     ''');
 
     await db.execute('''
       CREATE TABLE suggestions(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        description TEXT NOT NULL,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            description TEXT NOT NULL,
         image_path TEXT NOT NULL,
         type TEXT NOT NULL
-      )
-    ''');
+          )
+        ''');
 
     await db.execute('''
       CREATE TABLE notifications(
@@ -93,9 +95,15 @@ class AppDatabase {
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       } else {
-        await db.rawUpdate(
-          'UPDATE moods SET count = count + 1 WHERE name = ?',
-          [moodsModel.name],
+        await db.update(
+          'moods',
+          {
+            'count': result.first['count'] + 1,
+            'selectedTime': moodsModel.selectedTime,
+            'selectedDays': moodsModel.selectedDays,
+          },
+          where: 'name = ?',
+          whereArgs: [moodsModel.name],
         );
       }
     } catch (e) {

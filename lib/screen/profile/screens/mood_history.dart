@@ -94,20 +94,14 @@ class _MoodHistoryState extends State<MoodHistory> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  moodsList[index].name,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  'Played ${moodsList[index].count} times',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
+                                Text(moodsList[index].name),
+                                Text('Played ${moodsList[index].count} times'),
+                                if (moodsList[index].selectedTime != null)
+                                  Text(
+                                      'Time: ${moodsList[index].selectedTime}'),
+                                if (moodsList[index].selectedDays != null)
+                                  Text(
+                                      'Days: ${moodsList[index].selectedDays}'),
                               ],
                             ),
                             IconButton(

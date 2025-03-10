@@ -33,6 +33,8 @@ class _RemindersScreenState extends State<RemindersScreen> {
     {"name": "S", "is_select": false},
   ];
 
+  DateTime selectedTime = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,9 +81,14 @@ class _RemindersScreenState extends State<RemindersScreen> {
                         borderRadius: BorderRadius.circular(20)),
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.time,
-                      onDateTimeChanged: (DateTime newDate) {},
+                      onDateTimeChanged: (DateTime newDate) {
+                        setState(() {
+                          selectedTime = newDate;
+                        });
+                      },
                       use24hFormat: false,
                       minuteInterval: 1,
+                      initialDateTime: selectedTime,
                     ),
                   ),
                   const SizedBox(
@@ -128,9 +135,20 @@ class _RemindersScreenState extends State<RemindersScreen> {
             RoundButton(
                 title: "SAVE",
                 onPressed: () async {
+                  // Get selected days
+                  List<String> selectedDays = dayArr
+                      .where((day) => day["is_select"] == true)
+                      .map((day) => day["name"].toString())
+                      .toList();
+
+                  String timeString =
+                      "${selectedTime.hour}:${selectedTime.minute}";
+
                   MoodsModel newMood = MoodsModel(
                     name: widget.moodName,
                     assetImagePath: widget.assetImagePath,
+                    selectedTime: timeString,
+                    selectedDays: selectedDays.join(','),
                   );
                   await AppDatabase.instance.createOrIncrementMood(newMood);
                   context.showSnackbar(

@@ -158,7 +158,16 @@ class _MoodAnalysisScreenState extends State<MoodAnalysisScreen> {
                             child: Text(mood.name[0]),
                           ),
                     title: Text(mood.name),
-                    subtitle: Text('Played ${mood.count} times'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Played ${mood.count} times'),
+                        if (mood.selectedTime != null)
+                          Text('Time: ${mood.selectedTime}'),
+                        if (mood.selectedDays != null)
+                          Text('Days: ${mood.selectedDays}'),
+                      ],
+                    ),
                     trailing: Text('$percentage%'),
                   );
                 },
