@@ -147,6 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: TColor.primary,
+        leading: const SizedBox(),
         elevation: 0,
         title: Text(
           'Profile',

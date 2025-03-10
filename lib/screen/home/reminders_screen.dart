@@ -155,7 +155,8 @@ class _RemindersScreenState extends State<RemindersScreen> {
                     message: 'Mood Saved Successfully',
                     type: SnackbarMessageType.success,
                   );
-                  context.push(const MainTabViewScreen());
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => MainTabViewScreen()));
                 }),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
