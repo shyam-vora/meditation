@@ -77,12 +77,6 @@ class AppDatabase {
         conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
-  Future<void> createMoods(MoodsModel moodsModel) async {
-    final db = await database;
-    await db.insert('moods', moodsModel.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-
   Future<void> createOrIncrementMood(MoodsModel moodsModel) async {
     final db = await database;
     try {

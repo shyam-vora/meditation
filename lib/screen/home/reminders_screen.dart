@@ -132,7 +132,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                     name: widget.moodName,
                     assetImagePath: widget.assetImagePath,
                   );
-                  await AppDatabase.instance.createMoods(newMood);
+                  await AppDatabase.instance.createOrIncrementMood(newMood);
                   context.showSnackbar(
                     message: 'Mood Saved Successfully',
                     type: SnackbarMessageType.success,
